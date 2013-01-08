@@ -19,6 +19,11 @@ public final class DropsToInventory extends JavaPlugin {
         
         this.saveDefaultConfig();
         config = this.getConfig();
+        
+        if(config.getBoolean("options.checkVersion"))
+        {
+            CheckVersion.check(this);
+        }
     }
  
     @Override
