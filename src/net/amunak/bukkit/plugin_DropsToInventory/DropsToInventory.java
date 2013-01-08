@@ -4,9 +4,9 @@ package net.amunak.bukkit.plugin_DropsToInventory;
  *
  * @author Amunak
  */
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DropsToInventory extends JavaPlugin implements Listener {
@@ -65,6 +66,18 @@ public final class DropsToInventory extends JavaPlugin implements Listener {
     }
 
     private void moveToInventory(BlockBreakEvent event) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        HashMap<Integer, ItemStack> leftover;
+        Player player;
+
+        player = event.getPlayer();
+
+        event.setCancelled(true);
+        event.getBlock().setType(Material.AIR);
+
+        leftover = player.getInventory().addItem((ItemStack[]) event.getBlock().getDrops(player.getItemInHand()).toArray());
+        
+        for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
+            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), entry.getValue());
+        }
     }
 }
