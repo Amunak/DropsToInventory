@@ -1,5 +1,6 @@
 options:
   checkVersion: true
+  ignoreEnchantmentBug: false
   filterMode: blacklist
 filter:
   - DIAMOND_ORE
