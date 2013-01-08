@@ -24,6 +24,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     protected static Log log;
     protected FileConfiguration config;
     public List<String> filter;
+    public List<String> safeBlocks;
 
     @Override
     public void onEnable() {
@@ -52,19 +53,22 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
-        if (config.getBoolean("options.ignoreEnchantmentBug")
-                || (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) == 0
-                && event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) == 0)) {
-            if (config.get("options.filterMode").equals("blacklist")) {
-                if (!filter.contains(event.getBlock().getType().toString())) {
+        if (!config.getBoolean("options.useOnlySafeBlocks")
+                || safeBlocks.contains(event.getBlock().getType().toString())) {
+            if (config.getBoolean("options.ignoreEnchantmentBug")
+                    || (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) == 0
+                    && event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) == 0)) {
+                if (config.get("options.filterMode").equals("blacklist")) {
+                    if (!filter.contains(event.getBlock().getType().toString())) {
+                        this.moveToInventory(event);
+                    }
+                } else if (config.get("options.filterMode").equals("whitelist")) {
+                    if (filter.contains(event.getBlock().getType().toString())) {
+                        this.moveToInventory(event);
+                    }
+                } else {
                     this.moveToInventory(event);
                 }
-            } else if (config.get("options.filterMode").equals("whitelist")) {
-                if (filter.contains(event.getBlock().getType().toString())) {
-                    this.moveToInventory(event);
-                }
-            } else {
-                this.moveToInventory(event);
             }
         }
     }
@@ -83,6 +87,6 @@ public class DropsToInventory extends JavaPlugin implements Listener {
             event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), entry.getValue());
         }
 
-        event.getBlock().setType(Material.AIR);
+        event.getBlock().setTypeId(Material.AIR.getId());
     }
 }
