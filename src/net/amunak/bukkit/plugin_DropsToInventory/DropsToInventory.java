@@ -59,6 +59,8 @@ public class DropsToInventory extends JavaPlugin implements Listener {
                 if (filter.contains(event.getBlock().getType().toString())) {
                     this.moveToInventory(event);
                 }
+            } else {
+                    this.moveToInventory(event);
             }
     }
 
