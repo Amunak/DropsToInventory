@@ -7,14 +7,17 @@ package net.amunak.bukkit.plugin_DropsToInventory;
 import org.bukkit.plugin.java.JavaPlugin;
  
 public final class DropsToInventory extends JavaPlugin {
+    
+    protected static Log log;
  
     @Override
     public void onEnable(){
-        // TODO Insert logic to be performed when the plugin is enabled
+        log = new Log(this);
+        log.info("Plugin enabled");
     }
  
     @Override
     public void onDisable() {
-        // TODO Insert logic to be performed when the plugin is disabled
+        log.info("Plugin disabled");
     }
 }
