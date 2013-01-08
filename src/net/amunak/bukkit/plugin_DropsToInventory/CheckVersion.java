@@ -31,7 +31,7 @@ public final class CheckVersion {
         log = new Log(plugin);
         version = (int) (Integer.parseInt(plugin.getDescription().getVersion().replace(".", "")));
 
-        log.info(player, "Checking for updates...");
+        log.info(player, "Checking for updates...", true);
 
         try {
             u = new URL("http://mcplugins.amunak.net/query.php?v=" + version + "&p=" + plugin.getDescription().getName());
@@ -39,11 +39,11 @@ public final class CheckVersion {
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             while ((s = br.readLine()) != null) {
-                log.info(player, s);
+                log.info(player, s, true);
             }
             is.close();
         } catch (Exception e) {
-            log.info(player, "No response");
+            log.warning(player, "No response", true);
         }
     }
 
