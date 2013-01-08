@@ -27,7 +27,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         log = new Log(this);
-        log.info("Plugin enabled");
+        log.fine("Plugin enabled");
 
         this.saveDefaultConfig();
         config = this.getConfig();
@@ -46,7 +46,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         HandlerList.unregisterAll((JavaPlugin) this);
-        log.info("Plugin disabled");
+        log.fine("Plugin disabled");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled=true)
