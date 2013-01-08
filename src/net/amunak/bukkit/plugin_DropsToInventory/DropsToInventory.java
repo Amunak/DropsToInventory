@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -49,8 +50,11 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         log.fine("Plugin disabled");
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
+        if (config.getBoolean("options.ignoreEnchantmentBug")
+                || (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) == 0
+                && event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) == 0)) {
             if (config.get("options.filterMode").equals("blacklist")) {
                 if (!filter.contains(event.getBlock().getType().toString())) {
                     this.moveToInventory(event);
@@ -60,8 +64,9 @@ public class DropsToInventory extends JavaPlugin implements Listener {
                     this.moveToInventory(event);
                 }
             } else {
-                    this.moveToInventory(event);
+                this.moveToInventory(event);
             }
+        }
     }
 
     private void moveToInventory(BlockBreakEvent event) {
@@ -71,13 +76,13 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         player = event.getPlayer();
 
         event.setCancelled(true);
-        
+
         leftover = player.getInventory().addItem(event.getBlock().getDrops(player.getItemInHand()).toArray(new ItemStack[0]));
-        
+
         for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
             event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), entry.getValue());
         }
-        
+
         event.getBlock().setType(Material.AIR);
     }
 }
