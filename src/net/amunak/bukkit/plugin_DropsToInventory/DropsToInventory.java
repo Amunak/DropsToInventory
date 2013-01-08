@@ -71,7 +71,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         event.setCancelled(true);
         event.getBlock().setType(Material.AIR);
 
-        leftover = player.getInventory().addItem(event.getBlock().getDrops(player.getItemInHand()).toArray(new ItemStack[0]));
+        leftover = player.getInventory().addItem((ItemStack[]) event.getBlock().getDrops(player.getItemInHand()).toArray());
         
         for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
             event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), entry.getValue());
