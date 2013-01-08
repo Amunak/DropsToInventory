@@ -49,10 +49,8 @@ public final class DropsToInventory extends JavaPlugin implements Listener {
         log.info("Plugin disabled");
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled=true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
-        // If something (other plugin) cancelled the event, we want to ignore it
-        if (!event.isCancelled()) {
             if (config.get("options.filterMode").equals("blacklist")) {
                 if (!filter.contains(event.getBlock().getType().toString())) {
                     this.moveToInventory(event);
@@ -62,7 +60,6 @@ public final class DropsToInventory extends JavaPlugin implements Listener {
                     this.moveToInventory(event);
                 }
             }
-        }
     }
 
     private void moveToInventory(BlockBreakEvent event) {
