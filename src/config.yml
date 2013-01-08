@@ -1,2 +1,8 @@
 options:
   checkVersion: true
+  filterMode: blacklist
+filter:
+  - DIAMOND_ORE
+  - GOLD_ORE
+  - LAPIS_ORE
+  - IRON_ORE
