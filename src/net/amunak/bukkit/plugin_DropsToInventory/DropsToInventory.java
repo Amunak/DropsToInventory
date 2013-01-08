@@ -34,6 +34,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         config = this.getConfig();
         filter = config.getStringList("filter");
+        safeBlocks = config.getStringList("safeBlocks");
         for (String string : filter) {
             string = string.toUpperCase();
         }
