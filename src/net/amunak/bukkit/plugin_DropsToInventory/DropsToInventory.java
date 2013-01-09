@@ -1,9 +1,5 @@
 package net.amunak.bukkit.plugin_DropsToInventory;
 
-/**
- *
- * @author Amunak
- */
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +15,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * This is the main class of plugin DropsToInventory. It acts both as a plugin
+ * and listener.
+ *
+ * @author Amunak
+ */
 public class DropsToInventory extends JavaPlugin implements Listener {
 
     protected static Log log;
