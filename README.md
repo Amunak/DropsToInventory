@@ -1,3 +1,5 @@
 DropsToInventory
-===================
-Please note that despite being public, you are not allowed to use source code of this project without permission. You can ask to get one though.
+=================
+A Bukkit plugin - See http://dev.bukkit.org/server-mods/drops-to-inventory/
+
+Please let me know if you want to fork and redistribute this plugin.
