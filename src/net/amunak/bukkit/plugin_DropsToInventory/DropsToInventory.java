@@ -19,7 +19,6 @@ package net.amunak.bukkit.plugin_DropsToInventory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -44,7 +43,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
     protected static Log log;
     protected FileConfiguration config;
-    public List<String> filter;
+    public List<String> blockFilter;
     public List<String> allowedEntities;
     public List<String> safeBlocks;
 
@@ -55,14 +54,15 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
         this.saveDefaultConfig();
         config = this.getConfig();
-        filter = config.getStringList("filter");
-        allowedEntities = config.getStringList("allowedEntities");
-        safeBlocks = config.getStringList("safeBlocks");
-        for (String string : filter) {
+        blockFilter = config.getStringList("lists.blockFilter");
+        allowedEntities = config.getStringList("lists.allowedEntities");
+        safeBlocks = config.getStringList("lists.safeBlocks");
+        
+        for (String string : blockFilter) {
             string = string.toUpperCase();
         }
 
-        if (config.getBoolean("options.checkVersion")) {
+        if (config.getBoolean("options.general.checkVersion")) {
             CheckVersion.check(this);
         }
 
@@ -77,17 +77,17 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
-        if (!config.getBoolean("options.useOnlySafeBlocks")
+        if (!config.getBoolean("options.general.useOnlySafeBlocks")
                 || safeBlocks.contains(event.getBlock().getType().toString())) {
-            if (config.getBoolean("options.ignoreEnchantmentBug")
+            if (config.getBoolean("options.blocks.ignoreEnchantmentBug")
                     || (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) == 0
                     && event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) == 0)) {
-                if (config.get("options.filterMode").equals("blacklist")) {
-                    if (!filter.contains(event.getBlock().getType().toString())) {
+                if (config.get("options.blocks.filterMode").equals("blacklist")) {
+                    if (!blockFilter.contains(event.getBlock().getType().toString())) {
                         this.moveBlockToInventory(event);
                     }
-                } else if (config.get("options.filterMode").equals("whitelist")) {
-                    if (filter.contains(event.getBlock().getType().toString())) {
+                } else if (config.get("options.blocks.filterMode").equals("whitelist")) {
+                    if (blockFilter.contains(event.getBlock().getType().toString())) {
                         this.moveBlockToInventory(event);
                     }
                 } else {
@@ -101,7 +101,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         //We ignore everything not killed by a player
         if (event.getEntity().getKiller().getType() == EntityType.PLAYER) {
-            if (config.getBoolean("options.allowEntities") && allowedEntities.contains(event.getEntity().getType().toString())) {
+            if (config.getBoolean("options.blocks.allowEntities") && allowedEntities.contains(event.getEntity().getType().toString())) {
                 
             }
         }
