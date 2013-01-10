@@ -139,7 +139,5 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
             player.getWorld().dropItemNaturally(leftoverDropLocation, entry.getValue());
         }
-
     }
-    
 }
