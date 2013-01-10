@@ -30,26 +30,28 @@ import org.bukkit.event.block.BlockBreakEvent;
 public final class BlockBreakEventListener implements Listener {
     public List<String> blockFilter;
     public List<String> safeBlocks;
+    public DropsToInventory plugin;
 
-    public BlockBreakEventListener(DropsToInventory plugin) {
+    public BlockBreakEventListener(DropsToInventory p) {
+        plugin = p;
         blockFilter = plugin.config.getStringList("lists.blockFilter");
         safeBlocks = plugin.config.getStringList("lists.safeBlocks");
         Commons.fixEnumLists(blockFilter, safeBlocks);
     }
 
-    public void onBlockBreakEvent(BlockBreakEvent event, DropsToInventory plugin) {
+    public void onBlockBreakEvent(BlockBreakEvent event) {
         if (!plugin.config.getBoolean("options.general.useOnlySafeBlocks") || safeBlocks.contains(event.getBlock().getType().toString())) {
             if (plugin.config.getBoolean("options.blocks.ignoreEnchantmentBug") || !enchantBugPresent(event)) {
                 if (plugin.config.get("options.blocks.filterMode").equals("blacklist")) {
                     if (!blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockDropToInventory(event, plugin);
+                        this.moveBlockDropToInventory(event);
                     }
                 } else if (plugin.config.get("options.blocks.filterMode").equals("whitelist")) {
                     if (blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockDropToInventory(event, plugin);
+                        this.moveBlockDropToInventory(event);
                     }
                 } else {
-                    this.moveBlockDropToInventory(event, plugin);
+                    this.moveBlockDropToInventory(event);
                 }
             }
         }
@@ -73,7 +75,7 @@ public final class BlockBreakEventListener implements Listener {
      *
      * @param event block break event
      */
-    private void moveBlockDropToInventory(BlockBreakEvent event, DropsToInventory plugin) {
+    private void moveBlockDropToInventory(BlockBreakEvent event) {
         plugin.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
         event.setCancelled(true);
         event.getBlock().setTypeId(Material.AIR.getId());
