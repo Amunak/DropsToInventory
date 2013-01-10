@@ -79,8 +79,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         if (!config.getBoolean("options.general.useOnlySafeBlocks")
                 || safeBlocks.contains(event.getBlock().getType().toString())) {
             if (config.getBoolean("options.blocks.ignoreEnchantmentBug")
-                    || (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) == 0
-                    && event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) == 0)) {
+                    || !enchantBugPresent(event)) {
                 if (config.get("options.blocks.filterMode").equals("blacklist")) {
                     if (!blockFilter.contains(event.getBlock().getType().toString())) {
                         this.moveBlockDropToInventory(event);
@@ -139,5 +138,18 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
             player.getWorld().dropItemNaturally(leftoverDropLocation, entry.getValue());
         }
+    }
+
+    private boolean enchantBugPresent(BlockBreakEvent event) {
+        Collection<Enchantment> buggedEnchants = null;
+        buggedEnchants.add(Enchantment.LOOT_BONUS_BLOCKS);
+        buggedEnchants.add(Enchantment.SILK_TOUCH);
+
+        for (Enchantment enchantment : buggedEnchants) {
+            if (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(enchantment) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
