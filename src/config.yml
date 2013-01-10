@@ -1,6 +1,7 @@
 options:
   checkVersion: true
   ignoreEnchantmentBug: false
+  allowEntities: true
   useOnlySafeBlocks: true
   filterMode: blacklist
 filter:
@@ -8,6 +9,44 @@ filter:
   - GOLD_ORE
   - LAPIS_ORE
   - IRON_ORE
+allowedEntities:
+# a player
+  - PLAYER
+# general entities
+  - PAINTING
+  - ITEM_FRAME
+  - MINECART
+  - BOAT
+# mobs
+  - CREEPER
+  - SKELETON
+  - SPIDER
+  - GIANT
+  - ZOMBIE
+  - SLIME
+  - GHAST
+  - PIG_ZOMBIE
+  - ENDERMAN
+  - CAVE_SPIDER
+  - SILVERFISH
+  - BLAZE
+  - MAGMA_CUBE
+#  - ENDER_DRAGON
+  - WITHER
+  - BAT
+  - WITCH
+# animals
+  - PIG
+  - SHEEP
+  - COW
+  - CHICKEN
+  - SQUID
+  - WOLF
+  - MUSHROOM_COW
+  - SNOWMAN
+  - OCELOT
+  - IRON_GOLEM
+  - VILLAGER
 safeBlocks:
   - STONE
   - GRASS

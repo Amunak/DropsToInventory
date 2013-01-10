@@ -19,15 +19,18 @@ package net.amunak.bukkit.plugin_DropsToInventory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -42,6 +45,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     protected static Log log;
     protected FileConfiguration config;
     public List<String> filter;
+    public List<String> allowedEntities;
     public List<String> safeBlocks;
 
     @Override
@@ -52,6 +56,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         config = this.getConfig();
         filter = config.getStringList("filter");
+        allowedEntities = config.getStringList("allowedEntities");
         safeBlocks = config.getStringList("safeBlocks");
         for (String string : filter) {
             string = string.toUpperCase();
@@ -92,6 +97,16 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityDeath(EntityDeathEvent event) {
+        //We ignore everything not killed by a player
+        if (event.getEntity().getKiller().getType() == EntityType.PLAYER) {
+            if (config.getBoolean("options.allowEntities") && allowedEntities.contains(event.getEntity().getType().toString())) {
+                
+            }
+        }
+    }
+
     private void moveBlockToInventory(BlockBreakEvent event) {
         HashMap<Integer, ItemStack> leftover;
         Player player;
@@ -99,7 +114,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         player = event.getPlayer();
 
         player.giveExp(event.getExpToDrop());
-        event.setCancelled(true);        
+        event.setCancelled(true);
 
         leftover = player.getInventory().addItem(event.getBlock().getDrops(player.getItemInHand()).toArray(new ItemStack[0]));
 
