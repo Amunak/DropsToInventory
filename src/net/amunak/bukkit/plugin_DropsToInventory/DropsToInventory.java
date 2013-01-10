@@ -79,20 +79,20 @@ public class DropsToInventory extends JavaPlugin implements Listener {
                     && event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) == 0)) {
                 if (config.get("options.filterMode").equals("blacklist")) {
                     if (!filter.contains(event.getBlock().getType().toString())) {
-                        this.moveToInventory(event);
+                        this.moveBlockToInventory(event);
                     }
                 } else if (config.get("options.filterMode").equals("whitelist")) {
                     if (filter.contains(event.getBlock().getType().toString())) {
-                        this.moveToInventory(event);
+                        this.moveBlockToInventory(event);
                     }
                 } else {
-                    this.moveToInventory(event);
+                    this.moveBlockToInventory(event);
                 }
             }
         }
     }
 
-    private void moveToInventory(BlockBreakEvent event) {
+    private void moveBlockToInventory(BlockBreakEvent event) {
         HashMap<Integer, ItemStack> leftover;
         Player player;
 
