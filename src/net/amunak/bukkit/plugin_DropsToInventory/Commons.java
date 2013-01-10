@@ -1,7 +1,5 @@
 package net.amunak.bukkit.plugin_DropsToInventory;
 
-import java.util.List;
-
 /**
  * Copyright 2013 Jiří Barouš
  *
@@ -18,6 +16,9 @@ import java.util.List;
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import java.util.List;
+
 /**
  * contains common static methods
  *
