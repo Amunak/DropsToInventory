@@ -98,7 +98,8 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
         player = event.getPlayer();
 
-        event.setCancelled(true);
+        player.giveExp(event.getExpToDrop());
+        event.setCancelled(true);        
 
         leftover = player.getInventory().addItem(event.getBlock().getDrops(player.getItemInHand()).toArray(new ItemStack[0]));
 
