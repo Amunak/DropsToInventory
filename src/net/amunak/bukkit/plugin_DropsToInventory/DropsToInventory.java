@@ -104,6 +104,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         //We ignore everything not killed by a player
         if (event.getEntity().getKiller().getType() == EntityType.PLAYER) {
             if (config.getBoolean("options.blocks.allowEntities") && allowedEntities.contains(event.getEntity().getType().toString())) {
+                this.moveDropToInventory(event.getEntity().getKiller(), event.getDrops(), event.getDroppedExp(), event.getEntity().getLocation());
             }
         }
     }
