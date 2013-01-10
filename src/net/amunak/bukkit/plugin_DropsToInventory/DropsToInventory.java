@@ -59,10 +59,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         blockFilter = config.getStringList("lists.blockFilter");
         allowedEntities = config.getStringList("lists.allowedEntities");
         safeBlocks = config.getStringList("lists.safeBlocks");
-
-        for (String string : blockFilter) {
-            string = string.toUpperCase();
-        }
+        Commons.fixEnumLists(blockFilter, allowedEntities, safeBlocks);
 
         if (config.getBoolean("options.general.checkVersion")) {
             CheckVersion.check(this);
@@ -122,7 +119,9 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     }
 
     /**
-     * moves drop and xp into player's inventory, leaving leftover on specified location
+     * moves drop and xp into player's inventory, leaving leftover on specified
+     * location
+     *
      * @param player the player
      * @param drop collection of drop
      * @param xp amount of xp
@@ -142,4 +141,5 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         }
 
     }
+    
 }
