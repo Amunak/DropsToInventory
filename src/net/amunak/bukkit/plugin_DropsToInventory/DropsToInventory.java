@@ -16,9 +16,11 @@ package net.amunak.bukkit.plugin_DropsToInventory;
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -57,7 +59,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         blockFilter = config.getStringList("lists.blockFilter");
         allowedEntities = config.getStringList("lists.allowedEntities");
         safeBlocks = config.getStringList("lists.safeBlocks");
-        
+
         for (String string : blockFilter) {
             string = string.toUpperCase();
         }
@@ -84,14 +86,14 @@ public class DropsToInventory extends JavaPlugin implements Listener {
                     && event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) == 0)) {
                 if (config.get("options.blocks.filterMode").equals("blacklist")) {
                     if (!blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockToInventory(event);
+                        this.moveBlockDropToInventory(event);
                     }
                 } else if (config.get("options.blocks.filterMode").equals("whitelist")) {
                     if (blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockToInventory(event);
+                        this.moveBlockDropToInventory(event);
                     }
                 } else {
-                    this.moveBlockToInventory(event);
+                    this.moveBlockDropToInventory(event);
                 }
             }
         }
@@ -102,26 +104,41 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         //We ignore everything not killed by a player
         if (event.getEntity().getKiller().getType() == EntityType.PLAYER) {
             if (config.getBoolean("options.blocks.allowEntities") && allowedEntities.contains(event.getEntity().getType().toString())) {
-                
             }
         }
     }
 
-    private void moveBlockToInventory(BlockBreakEvent event) {
-        HashMap<Integer, ItemStack> leftover;
-        Player player;
-
-        player = event.getPlayer();
-
-        player.giveExp(event.getExpToDrop());
+    /**
+     * extracts drop info from block break event and passes it further, managing
+     * block break necessities
+     *
+     * @param event block break event
+     */
+    private void moveBlockDropToInventory(BlockBreakEvent event) {
+        this.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
         event.setCancelled(true);
+        event.getBlock().setTypeId(Material.AIR.getId());
+    }
 
-        leftover = player.getInventory().addItem(event.getBlock().getDrops(player.getItemInHand()).toArray(new ItemStack[0]));
+    /**
+     * moves drop and xp into player's inventory, leaving leftover on specified location
+     * @param player the player
+     * @param drop collection of drop
+     * @param xp amount of xp
+     * @param leftoverDropLocation the location for leftover
+     */
+    private void moveDropToInventory(Player player, Collection<ItemStack> drop, Integer xp, Location leftoverDropLocation) {
+        HashMap<Integer, ItemStack> leftover;
 
-        for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
-            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), entry.getValue());
+        if (xp != null) {
+            player.giveExp(xp);
         }
 
-        event.getBlock().setTypeId(Material.AIR.getId());
+        leftover = player.getInventory().addItem(drop.toArray(new ItemStack[0]));
+
+        for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
+            player.getWorld().dropItemNaturally(leftoverDropLocation, entry.getValue());
+        }
+
     }
 }
