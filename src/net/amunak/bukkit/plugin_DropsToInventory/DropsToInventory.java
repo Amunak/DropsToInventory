@@ -45,9 +45,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
     protected static Log log;
     protected FileConfiguration config;
-    public List<String> blockFilter;
     public List<String> allowedEntities;
-    public List<String> safeBlocks;
 
     @Override
     public void onEnable() {
@@ -56,43 +54,23 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
         this.saveDefaultConfig();
         config = this.getConfig();
-        blockFilter = config.getStringList("lists.blockFilter");
         allowedEntities = config.getStringList("lists.allowedEntities");
-        safeBlocks = config.getStringList("lists.safeBlocks");
-        Commons.fixEnumLists(blockFilter, allowedEntities, safeBlocks);
+        Commons.fixEnumLists(allowedEntities);
 
         if (config.getBoolean("options.general.checkVersion")) {
             CheckVersion.check(this);
         }
 
         this.getServer().getPluginManager().registerEvents(this, this);
+        if (config.getBoolean("options.blocks.allow")) {
+            this.getServer().getPluginManager().registerEvents(new BlockBreakEventListener(this), this);
+        }
     }
 
     @Override
     public void onDisable() {
         HandlerList.unregisterAll((JavaPlugin) this);
         log.fine("Plugin disabled");
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockBreakEvent(BlockBreakEvent event) {
-        if (!config.getBoolean("options.general.useOnlySafeBlocks")
-                || safeBlocks.contains(event.getBlock().getType().toString())) {
-            if (config.getBoolean("options.blocks.ignoreEnchantmentBug")
-                    || !enchantBugPresent(event)) {
-                if (config.get("options.blocks.filterMode").equals("blacklist")) {
-                    if (!blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockDropToInventory(event);
-                    }
-                } else if (config.get("options.blocks.filterMode").equals("whitelist")) {
-                    if (blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockDropToInventory(event);
-                    }
-                } else {
-                    this.moveBlockDropToInventory(event);
-                }
-            }
-        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -106,18 +84,6 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     }
 
     /**
-     * extracts drop info from block break event and passes it further, managing
-     * block break necessities
-     *
-     * @param event block break event
-     */
-    private void moveBlockDropToInventory(BlockBreakEvent event) {
-        this.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
-        event.setCancelled(true);
-        event.getBlock().setTypeId(Material.AIR.getId());
-    }
-
-    /**
      * moves drop and xp into player's inventory, leaving leftover on specified
      * location
      *
@@ -126,7 +92,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
      * @param xp amount of xp
      * @param leftoverDropLocation the location for leftover
      */
-    private void moveDropToInventory(Player player, Collection<ItemStack> drop, Integer xp, Location leftoverDropLocation) {
+    protected void moveDropToInventory(Player player, Collection<ItemStack> drop, Integer xp, Location leftoverDropLocation) {
         HashMap<Integer, ItemStack> leftover;
 
         if (xp != null) {
@@ -138,18 +104,5 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
             player.getWorld().dropItemNaturally(leftoverDropLocation, entry.getValue());
         }
-    }
-
-    private boolean enchantBugPresent(BlockBreakEvent event) {
-        Collection<Enchantment> buggedEnchants = null;
-        buggedEnchants.add(Enchantment.LOOT_BONUS_BLOCKS);
-        buggedEnchants.add(Enchantment.SILK_TOUCH);
-
-        for (Enchantment enchantment : buggedEnchants) {
-            if (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(enchantment) > 0) {
-                return true;
-            }
-        }
-        return false;
     }
 }
