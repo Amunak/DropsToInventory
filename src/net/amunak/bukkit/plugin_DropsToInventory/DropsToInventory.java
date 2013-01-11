@@ -30,6 +30,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,7 +47,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     public List<String> allowedEntities;
 
     @Override
-    public void onEnable() {        
+    public void onEnable() {
         log = new Log(this);
         log.raiseFineLevel = true;
         log.fine("Plugin enabled");
@@ -72,7 +73,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         HandlerList.unregisterAll((JavaPlugin) this);
         log.fine("Plugin disabled");
     }
-    
+
     private void reloadConfigurtion() {
         /**
          * We need to re-register event listeners when reloading configuration!
@@ -81,7 +82,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityDeath(EntityDeathEvent event){
+    public void onEntityDeath(EntityDeathEvent event) {
         log.fine("Entity " + event.getEntityType() + " died by " + event.getEntity().getKiller());
         //We ignore everything not killed by a player
         if ((event.getEntity().getKiller() != null) && (event.getEntity().getKiller() instanceof Player)) {
@@ -93,6 +94,18 @@ public class DropsToInventory extends JavaPlugin implements Listener {
             }
         }
     }
+
+//    public void onHangingBreak(HangingBreakByEntityEvent event) {
+//        log.fine("Hanging entity " + event.getEntity().getType() + " died by " + event.getRemover());
+//        //We ignore everything not removed by a player
+//        if ((event.getRemover() != null) && (event.getRemover() instanceof Player)) {
+//            if (config.getBoolean("options.entities.allow") && allowedEntities.contains(event.getEntity().getType().toString())) {
+//                log.fine("dropping removed " + event.getEntity().getType() + " to " + (Player) event.getRemover().);
+//                this.moveDropToInventory(event.getEntity().getKiller(), event.getDrops(), event.getDroppedExp(), event.getEntity().getLocation());
+//                event.getEntity().get;
+//            }
+//        }
+//    }
 
     /**
      * moves drop and xp into player's inventory, leaving leftover on specified
@@ -117,5 +130,4 @@ public class DropsToInventory extends JavaPlugin implements Listener {
             player.getWorld().dropItemNaturally(leftoverDropLocation, entry.getValue());
         }
     }
-    
 }
