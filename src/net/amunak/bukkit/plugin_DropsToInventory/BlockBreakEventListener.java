@@ -69,6 +69,9 @@ public final class BlockBreakEventListener implements Listener {
                 && (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode))) {
             log.fine("dropping " + event.getBlock().getType() + " to inventory of " + event.getPlayer().getName());
             plugin.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
+            /* event.getBlock().getDrops().clear(); //bugged
+             * event.setExpToDrop(0);
+             */
             event.setCancelled(true);
             event.getBlock().setTypeId(Material.AIR.getId());
         }
