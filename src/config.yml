@@ -1,6 +1,7 @@
 options:
   general:
     checkVersion: true
+    supplySound: true
   blocks:
     allow: true
     filterMode: blacklist
