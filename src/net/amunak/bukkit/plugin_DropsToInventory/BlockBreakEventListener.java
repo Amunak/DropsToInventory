@@ -24,7 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 /**
- *
+ * block break event listener
  * @author Amunak
  */
 public final class BlockBreakEventListener implements Listener {
