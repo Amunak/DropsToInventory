@@ -20,7 +20,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,6 +44,8 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     protected static Log log;
     protected FileConfiguration config;
     public List<String> allowedEntities;
+    public Random random;
+    public Boolean supplySound;
 
     @Override
     public void onEnable() {
@@ -50,8 +54,11 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         log.fine("Plugin enabled");
         log.fine("Fine logging will be seen");
 
+        random = new Random();
+
         this.saveDefaultConfig();
         config = this.getConfig();
+        supplySound = config.getBoolean("options.general.supplySound");
         allowedEntities = config.getStringList("lists.allowedEntities");
         Common.fixEnumLists(allowedEntities);
 
@@ -103,7 +110,6 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 //            }
 //        }
 //    }
-
     /**
      * moves drop and xp into player's inventory, leaving leftover on specified
      * location
@@ -116,9 +122,16 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     protected void moveDropToInventory(Player player, Collection<ItemStack> drop, Integer xp, Location leftoverDropLocation) {
         HashMap<Integer, ItemStack> leftover;
 
-        if (xp != null) {
+        if ((xp != null) && (xp > 0)) {
             log.fine("giving " + xp + " xp");
             player.giveExp(xp);
+            if (supplySound) {
+                player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.1F, 0.5F * ((this.random.nextFloat() - this.random.nextFloat()) * 0.7F + 1.8F));
+            }
+        }
+
+        if (!drop.isEmpty() && supplySound) {
+            player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 0.2F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
         }
 
         leftover = player.getInventory().addItem(drop.toArray(new ItemStack[0]));
