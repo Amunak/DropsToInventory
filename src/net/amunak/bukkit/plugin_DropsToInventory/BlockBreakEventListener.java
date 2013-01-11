@@ -25,10 +25,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 /**
  * block break event listener
+ *
  * @author Amunak
  */
 public final class BlockBreakEventListener implements Listener {
 
+    protected static Log log;
     public List<String> blockFilter;
     public List<String> safeBlocks;
     public DropsToInventory plugin;
@@ -38,6 +40,9 @@ public final class BlockBreakEventListener implements Listener {
 
     public BlockBreakEventListener(DropsToInventory p) {
         plugin = p;
+        log = new Log(plugin);
+        log.fine("registering BlockBreakEventListener");
+
         filterMode = BlockFilter.fromString(plugin.config.getString("options.blocks.filterMode"));
         useSafeBlocks = plugin.config.getBoolean("options.blocks.useOnlySafeBlocks");
         fixEnchantmentBug = !plugin.config.getBoolean("options.blocks.ignoreEnchantmentBug");
@@ -49,9 +54,12 @@ public final class BlockBreakEventListener implements Listener {
             safeBlocks = plugin.config.getStringList("lists.safeBlocks");
         }
         Common.fixEnumLists(blockFilter, safeBlocks);
+
+        log.fine("BlockBreakEventListener registered");
     }
 
     public void onBlockBreakEvent(BlockBreakEvent event) {
+        log.fine(event.getPlayer().getName() + " broke " + event.getBlock().getType());
         if ((!useSafeBlocks || safeBlocks.contains(event.getBlock().getType().toString()))
                 && (!fixEnchantmentBug || !enchantBugPresent(event))
                 && (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode))) {
@@ -65,6 +73,7 @@ public final class BlockBreakEventListener implements Listener {
         buggedEnchants.add(Enchantment.SILK_TOUCH);
         for (Enchantment enchantment : buggedEnchants) {
             if (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(enchantment) > 0) {
+                log.fine(event.getPlayer().getName() + " has enchant bug present");
                 return true;
             }
         }
@@ -78,6 +87,7 @@ public final class BlockBreakEventListener implements Listener {
      * @param event block break event
      */
     private void moveBlockDropToInventory(BlockBreakEvent event) {
+        log.fine("dropping " + event.getBlock().getType() + " to inventory of " + event.getPlayer().getName());
         plugin.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
         event.setCancelled(true);
         event.getBlock().setTypeId(Material.AIR.getId());
@@ -121,7 +131,10 @@ public final class BlockBreakEventListener implements Listener {
          * @return true if elegible, else otherwise
          */
         public static Boolean isEligible(boolean isInList, Integer mode) {
-            return mode.equals(NONE) || (mode.equals(BLACKLIST) && !isInList) || (mode.equals(WHITELIST) && isInList);
+            boolean result;
+            result = mode.equals(NONE) || (mode.equals(BLACKLIST) && !isInList) || (mode.equals(WHITELIST) && isInList);
+            log.fine("block is eligible: " + result);
+            return result;
         }
 
         /**
