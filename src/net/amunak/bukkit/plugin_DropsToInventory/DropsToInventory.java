@@ -45,14 +45,14 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     public List<String> allowedEntities;
 
     @Override
-    public void onEnable() {
+    public void onEnable() {        
         log = new Log(this);
         log.fine("Plugin enabled");
 
         this.saveDefaultConfig();
         config = this.getConfig();
         allowedEntities = config.getStringList("lists.allowedEntities");
-        Commons.fixEnumLists(allowedEntities);
+        Common.fixEnumLists(allowedEntities);
 
         if (config.getBoolean("options.general.checkVersion")) {
             CheckVersion.check(this);
@@ -68,6 +68,13 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     public void onDisable() {
         HandlerList.unregisterAll((JavaPlugin) this);
         log.fine("Plugin disabled");
+    }
+    
+    private void reloadConfigurtion() {
+        /**
+         * We need to re-register event listeners when reloading configuration!
+         */
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -102,4 +109,5 @@ public class DropsToInventory extends JavaPlugin implements Listener {
             player.getWorld().dropItemNaturally(leftoverDropLocation, entry.getValue());
         }
     }
+    
 }
