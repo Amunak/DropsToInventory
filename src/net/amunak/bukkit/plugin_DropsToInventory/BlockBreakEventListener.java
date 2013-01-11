@@ -67,7 +67,10 @@ public final class BlockBreakEventListener implements Listener {
         if ((!useSafeBlocks || safeBlocks.contains(event.getBlock().getType().toString()))
                 && (!fixEnchantmentBug || !enchantBugPresent(event))
                 && (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode))) {
-            this.moveBlockDropToInventory(event);
+            log.fine("dropping " + event.getBlock().getType() + " to inventory of " + event.getPlayer().getName());
+            plugin.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
+            event.setCancelled(true);
+            event.getBlock().setTypeId(Material.AIR.getId());
         }
     }
 
@@ -75,7 +78,7 @@ public final class BlockBreakEventListener implements Listener {
         List<Enchantment> buggedEnchants = new ArrayList<Enchantment>();
         buggedEnchants.add(Enchantment.LOOT_BONUS_BLOCKS);
         buggedEnchants.add(Enchantment.SILK_TOUCH);
-        
+
         for (Enchantment enchantment : buggedEnchants) {
             if (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(enchantment) > 0) {
                 log.fine(event.getPlayer().getName() + " has enchant bug present");
@@ -83,19 +86,6 @@ public final class BlockBreakEventListener implements Listener {
             }
         }
         return false;
-    }
-
-    /**
-     * extracts drop info from block break event and passes it further, managing
-     * block break necessities
-     *
-     * @param event block break event
-     */
-    private void moveBlockDropToInventory(BlockBreakEvent event) {
-        log.fine("dropping " + event.getBlock().getType() + " to inventory of " + event.getPlayer().getName());
-        plugin.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
-        event.setCancelled(true);
-        event.getBlock().setTypeId(Material.AIR.getId());
     }
 
     /**
