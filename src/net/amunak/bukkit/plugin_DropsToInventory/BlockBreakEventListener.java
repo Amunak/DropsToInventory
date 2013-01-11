@@ -52,14 +52,10 @@ public final class BlockBreakEventListener implements Listener {
     }
 
     public void onBlockBreakEvent(BlockBreakEvent event) {
-        if (!plugin.config.getBoolean("options.general.useOnlySafeBlocks") || safeBlocks.contains(event.getBlock().getType().toString())) {
-            if (plugin.config.getBoolean("options.blocks.ignoreEnchantmentBug") || !enchantBugPresent(event)) {
-                if (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode)) {
-                    if (!blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockDropToInventory(event);
-                    }
-                }
-            }
+        if ((!useSafeBlocks || safeBlocks.contains(event.getBlock().getType().toString()))
+                && (!fixEnchantmentBug || !enchantBugPresent(event))
+                && (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode))) {
+            this.moveBlockDropToInventory(event);
         }
     }
 
