@@ -16,7 +16,7 @@ package net.amunak.bukkit.plugin_DropsToInventory;
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -43,7 +43,7 @@ public final class BlockBreakEventListener implements Listener {
     public BlockBreakEventListener(DropsToInventory p) {
         plugin = p;
         log = new Log(plugin);
-        //log.raiseFineLevel = true;
+//        log.raiseFineLevel = true;
         log.fine("registering BlockBreakEventListener");
 
         filterMode = BlockFilter.fromString(plugin.config.getString("options.blocks.filterMode"));
@@ -72,9 +72,10 @@ public final class BlockBreakEventListener implements Listener {
     }
 
     private boolean enchantBugPresent(BlockBreakEvent event) {
-        Collection<Enchantment> buggedEnchants = null;
+        List<Enchantment> buggedEnchants = new ArrayList<Enchantment>();
         buggedEnchants.add(Enchantment.LOOT_BONUS_BLOCKS);
         buggedEnchants.add(Enchantment.SILK_TOUCH);
+        
         for (Enchantment enchantment : buggedEnchants) {
             if (event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(enchantment) > 0) {
                 log.fine(event.getPlayer().getName() + " has enchant bug present");
