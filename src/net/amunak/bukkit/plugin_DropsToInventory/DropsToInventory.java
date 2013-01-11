@@ -16,6 +16,7 @@ package net.amunak.bukkit.plugin_DropsToInventory;
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +48,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {        
         log = new Log(this);
-//        log.raiseFineLevel = true;
+        log.raiseFineLevel = true;
         log.fine("Plugin enabled");
         log.fine("Fine logging will be seen");
 
@@ -80,11 +81,15 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityDeath(EntityDeathEvent event) {
+    public void onEntityDeath(EntityDeathEvent event){
+        log.fine("Entity " + event.getEntityType() + " died by " + event.getEntity().getKiller());
         //We ignore everything not killed by a player
-        if (event.getEntity().getKiller().getType() == EntityType.PLAYER) {
-            if (config.getBoolean("options.blocks.allowEntities") && allowedEntities.contains(event.getEntity().getType().toString())) {
+        if ((event.getEntity().getKiller() != null) && (event.getEntity().getKiller() instanceof Player)) {
+            if (config.getBoolean("options.entities.allow") && allowedEntities.contains(event.getEntity().getType().toString())) {
+                log.fine("dropping inventory of dead " + event.getEntityType() + " to " + event.getEntity().getKiller());
                 this.moveDropToInventory(event.getEntity().getKiller(), event.getDrops(), event.getDroppedExp(), event.getEntity().getLocation());
+                event.setDroppedExp(0);
+                event.getDrops().clear();
             }
         }
     }
@@ -102,6 +107,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         HashMap<Integer, ItemStack> leftover;
 
         if (xp != null) {
+            log.fine("giving " + xp + " xp");
             player.giveExp(xp);
         }
 
