@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
@@ -41,6 +43,7 @@ public final class BlockBreakEventListener implements Listener {
     public BlockBreakEventListener(DropsToInventory p) {
         plugin = p;
         log = new Log(plugin);
+        //log.raiseFineLevel = true;
         log.fine("registering BlockBreakEventListener");
 
         filterMode = BlockFilter.fromString(plugin.config.getString("options.blocks.filterMode"));
@@ -58,6 +61,7 @@ public final class BlockBreakEventListener implements Listener {
         log.fine("BlockBreakEventListener registered");
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
         log.fine(event.getPlayer().getName() + " broke " + event.getBlock().getType());
         if ((!useSafeBlocks || safeBlocks.contains(event.getBlock().getType().toString()))
