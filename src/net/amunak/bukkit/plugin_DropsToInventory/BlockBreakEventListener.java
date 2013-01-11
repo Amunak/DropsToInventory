@@ -28,30 +28,36 @@ import org.bukkit.event.block.BlockBreakEvent;
  * @author Amunak
  */
 public final class BlockBreakEventListener implements Listener {
+
     public List<String> blockFilter;
     public List<String> safeBlocks;
     public DropsToInventory plugin;
+    public Integer filterMode;
+    public Boolean useSafeBlocks;
+    public Boolean fixEnchantmentBug;
 
     public BlockBreakEventListener(DropsToInventory p) {
         plugin = p;
-        blockFilter = plugin.config.getStringList("lists.blockFilter");
-        safeBlocks = plugin.config.getStringList("lists.safeBlocks");
-        Commons.fixEnumLists(blockFilter, safeBlocks);
+        filterMode = BlockFilter.fromString(plugin.config.getString("options.blocks.filterMode"));
+        useSafeBlocks = plugin.config.getBoolean("options.blocks.useOnlySafeBlocks");
+        fixEnchantmentBug = !plugin.config.getBoolean("options.blocks.ignoreEnchantmentBug");
+
+        if (!filterMode.equals(BlockFilter.NONE)) {
+            blockFilter = plugin.config.getStringList("lists.blockFilter");
+        }
+        if (useSafeBlocks) {
+            safeBlocks = plugin.config.getStringList("lists.safeBlocks");
+        }
+        Common.fixEnumLists(blockFilter, safeBlocks);
     }
 
     public void onBlockBreakEvent(BlockBreakEvent event) {
         if (!plugin.config.getBoolean("options.general.useOnlySafeBlocks") || safeBlocks.contains(event.getBlock().getType().toString())) {
             if (plugin.config.getBoolean("options.blocks.ignoreEnchantmentBug") || !enchantBugPresent(event)) {
-                if (plugin.config.get("options.blocks.filterMode").equals("blacklist")) {
+                if (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode)) {
                     if (!blockFilter.contains(event.getBlock().getType().toString())) {
                         this.moveBlockDropToInventory(event);
                     }
-                } else if (plugin.config.get("options.blocks.filterMode").equals("whitelist")) {
-                    if (blockFilter.contains(event.getBlock().getType().toString())) {
-                        this.moveBlockDropToInventory(event);
-                    }
-                } else {
-                    this.moveBlockDropToInventory(event);
                 }
             }
         }
@@ -81,4 +87,58 @@ public final class BlockBreakEventListener implements Listener {
         event.getBlock().setTypeId(Material.AIR.getId());
     }
 
+    /**
+     * Holds filter modes and methods to retreive them
+     */
+    private static class BlockFilter {
+
+        public static final Integer NONE = 0;
+        public static final Integer BLACKLIST = 1;
+        public static final Integer WHITELIST = 2;
+
+        public static String toString(Integer i) {
+            if (i.equals(BLACKLIST)) {
+                return "BLACKLIST";
+            } else if (i.equals(WHITELIST)) {
+                return "WHITELIST";
+            } else {
+                return "NONE";
+            }
+        }
+
+        public static Integer fromString(String s) {
+            if (s.equalsIgnoreCase("BLACKLIST")) {
+                return BLACKLIST;
+            } else if (s.equalsIgnoreCase("WHITELIST")) {
+                return WHITELIST;
+            } else {
+                return NONE;
+            }
+        }
+
+        /**
+         * checks whether a block is eligible to be used according to a filter
+         * mode
+         *
+         * @param isInList is block in list
+         * @param mode filter mode to check against
+         * @return true if elegible, else otherwise
+         */
+        public static Boolean isEligible(boolean isInList, Integer mode) {
+            return mode.equals(NONE) || (mode.equals(BLACKLIST) && !isInList) || (mode.equals(WHITELIST) && isInList);
+        }
+
+        /**
+         * checks a block material against list and if it is eligible to be used
+         * according to a filter mode
+         *
+         * @param mat the material
+         * @param list list of materials (strings)
+         * @param mode filter mode to check against
+         * @return
+         */
+        public static Boolean isEligible(Material mat, List list, Integer mode) {
+            return isEligible(list.contains(mat.toString()), mode);
+        }
+    }
 }
