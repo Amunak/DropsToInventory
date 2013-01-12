@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -87,12 +88,14 @@ public class DropsToInventory extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDeath(EntityDeathEvent event) {
-        log.fine("Entity " + event.getEntityType() + " died by " + event.getEntity().getKiller());
-        //We ignore everything not killed by a player
-        if ((event.getEntity().getKiller() != null) && (event.getEntity().getKiller() instanceof Player)) {
+        Player killer;
+        killer = event.getEntity().getKiller();
+        log.fine("Entity " + event.getEntityType() + " died by " + killer);
+        //We ignore everything not killed by a player in survival
+        if ((killer != null) && killer.getGameMode().equals(GameMode.SURVIVAL)) {
             if (config.getBoolean("options.entities.allow") && allowedEntities.contains(event.getEntity().getType().toString())) {
-                log.fine("dropping inventory of dead " + event.getEntityType() + " to " + event.getEntity().getKiller());
-                this.moveDropToInventory(event.getEntity().getKiller(), event.getDrops(), event.getDroppedExp(), event.getEntity().getLocation());
+                log.fine("dropping inventory of dead " + event.getEntityType() + " to " + killer);
+                this.moveDropToInventory(killer, event.getDrops(), event.getDroppedExp(), event.getEntity().getLocation());
                 event.setDroppedExp(0);
                 event.getDrops().clear();
             }
