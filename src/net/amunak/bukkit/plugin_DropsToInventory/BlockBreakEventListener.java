@@ -18,6 +18,7 @@ package net.amunak.bukkit.plugin_DropsToInventory;
  */
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
@@ -64,7 +65,8 @@ public final class BlockBreakEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
         log.fine(event.getPlayer().getName() + " broke " + event.getBlock().getType());
-        if ((!useSafeBlocks || safeBlocks.contains(event.getBlock().getType().toString()))
+        if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)
+                && (!useSafeBlocks || safeBlocks.contains(event.getBlock().getType().toString()))
                 && (!fixEnchantmentBug || !enchantBugPresent(event))
                 && (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode))) {
             log.fine("dropping " + event.getBlock().getType() + " to inventory of " + event.getPlayer().getName());
