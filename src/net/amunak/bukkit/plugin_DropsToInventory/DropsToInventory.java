@@ -50,7 +50,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         log = new Log(this);
-        log.raiseFineLevel = true;
+//        log.raiseFineLevel = true;
         log.fine("Plugin enabled");
         log.fine("Fine logging will be seen");
 
