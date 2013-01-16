@@ -6,6 +6,7 @@ options:
     allow: true
     filterMode: blacklist
     useOnlySafeBlocks: true
+    fixItemDurability: true
     ignoreEnchantmentBug: false
   entities:
     allow: true
