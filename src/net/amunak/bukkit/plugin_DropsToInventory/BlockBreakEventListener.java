@@ -144,9 +144,9 @@ public final class BlockBreakEventListener implements Listener {
                 && (enchantLevel == 0 || (plugin.random.nextInt(100) <= 100 / (enchantLevel + 1)))) {
             log.fine("trying to fix durability on " + item.getType() + " with durability enchant " + enchantLevel);
             if (durabilityFixSwords.contains(item.getType())) {
-                item.setDurability((short) (item.getDurability() - 2));
+                item.setDurability((short) (item.getDurability() + 2));
             } else {
-                item.setDurability((short) (item.getDurability() - 1));
+                item.setDurability((short) (item.getDurability() + 1));
             }
         }
     }
