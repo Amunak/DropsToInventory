@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * block break event listener
@@ -36,10 +37,13 @@ public final class BlockBreakEventListener implements Listener {
     protected static Log log;
     public List<String> blockFilter;
     public List<String> safeBlocks;
+    private List<Material> durabilityFixAppliedItems = new ArrayList<Material>();
+    private List<Material> durabilityFixSwords = new ArrayList<Material>();
     public DropsToInventory plugin;
     public Integer filterMode;
     public Boolean useSafeBlocks;
     public Boolean fixEnchantmentBug;
+    public Boolean fixItemDurability;
 
     public BlockBreakEventListener(DropsToInventory p) {
         plugin = p;
@@ -50,6 +54,7 @@ public final class BlockBreakEventListener implements Listener {
         filterMode = BlockFilter.fromString(plugin.config.getString("options.blocks.filterMode"));
         useSafeBlocks = plugin.config.getBoolean("options.blocks.useOnlySafeBlocks");
         fixEnchantmentBug = !plugin.config.getBoolean("options.blocks.ignoreEnchantmentBug");
+        fixItemDurability = plugin.config.getBoolean("options.blocks.fixItemDurability");
 
         if (!filterMode.equals(BlockFilter.NONE)) {
             blockFilter = plugin.config.getStringList("lists.blockFilter");
@@ -58,6 +63,36 @@ public final class BlockBreakEventListener implements Listener {
             safeBlocks = plugin.config.getStringList("lists.safeBlocks");
         }
         Common.fixEnumLists(blockFilter, safeBlocks);
+
+        if (fixItemDurability) {
+            log.fine("we will try to fix item durability bug");
+            durabilityFixAppliedItems.add(Material.WOOD_SWORD);
+            durabilityFixAppliedItems.add(Material.WOOD_PICKAXE);
+            durabilityFixAppliedItems.add(Material.WOOD_AXE);
+            durabilityFixAppliedItems.add(Material.WOOD_SPADE);
+            durabilityFixAppliedItems.add(Material.STONE_SWORD);
+            durabilityFixAppliedItems.add(Material.STONE_PICKAXE);
+            durabilityFixAppliedItems.add(Material.STONE_AXE);
+            durabilityFixAppliedItems.add(Material.STONE_SPADE);
+            durabilityFixAppliedItems.add(Material.IRON_SWORD);
+            durabilityFixAppliedItems.add(Material.IRON_PICKAXE);
+            durabilityFixAppliedItems.add(Material.IRON_AXE);
+            durabilityFixAppliedItems.add(Material.IRON_SPADE);
+            durabilityFixAppliedItems.add(Material.GOLD_SWORD);
+            durabilityFixAppliedItems.add(Material.GOLD_PICKAXE);
+            durabilityFixAppliedItems.add(Material.GOLD_AXE);
+            durabilityFixAppliedItems.add(Material.GOLD_SPADE);
+            durabilityFixAppliedItems.add(Material.DIAMOND_SWORD);
+            durabilityFixAppliedItems.add(Material.DIAMOND_PICKAXE);
+            durabilityFixAppliedItems.add(Material.DIAMOND_AXE);
+            durabilityFixAppliedItems.add(Material.DIAMOND_SPADE);
+
+            durabilityFixSwords.add(Material.WOOD_SWORD);
+            durabilityFixSwords.add(Material.STONE_SWORD);
+            durabilityFixSwords.add(Material.IRON_SWORD);
+            durabilityFixSwords.add(Material.GOLD_SWORD);
+            durabilityFixSwords.add(Material.DIAMOND_SWORD);
+        }
 
         log.fine("BlockBreakEventListener registered");
     }
@@ -76,6 +111,7 @@ public final class BlockBreakEventListener implements Listener {
              */
             event.setCancelled(true);
             event.getBlock().setTypeId(Material.AIR.getId());
+            recalculateDurability(event.getPlayer().getItemInHand());
         }
     }
 
@@ -91,6 +127,28 @@ public final class BlockBreakEventListener implements Listener {
             }
         }
         return false;
+    }
+
+    /**
+     * Changes durability as if the block was broken normally. Durability
+     * enchant is applied if necessary. This works only for BLOCK BREAKS with
+     * SWORDS, PICKAXES, AXES AND SHOVELS!
+     *
+     * @param item the item durability is counter on
+     */
+    private void recalculateDurability(ItemStack item) {
+        Integer enchantLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
+        if (fixItemDurability
+                && durabilityFixAppliedItems.contains(item.getType())
+                //counting with durability enchant:
+                && (enchantLevel == 0 || (plugin.random.nextInt(100) <= 100 / (enchantLevel + 1)))) {
+            log.fine("trying to fix durability on " + item.getType() + " with durability enchant " + enchantLevel);
+            if (durabilityFixSwords.contains(item.getType())) {
+                item.setDurability((short) (item.getDurability() - 2));
+            } else {
+                item.setDurability((short) (item.getDurability() - 1));
+            }
+        }
     }
 
     /**
