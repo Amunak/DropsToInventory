@@ -58,11 +58,12 @@ public final class BlockBreakEventListener implements Listener {
 
         if (!filterMode.equals(BlockFilter.NONE)) {
             blockFilter = plugin.config.getStringList("lists.blockFilter");
+            Common.fixEnumLists(blockFilter);
         }
         if (useSafeBlocks) {
             safeBlocks = plugin.config.getStringList("lists.safeBlocks");
-        }
-        Common.fixEnumLists(blockFilter, safeBlocks);
+            Common.fixEnumLists(safeBlocks);
+        }        
 
         if (fixItemDurability) {
             log.fine("we will try to fix item durability bug");
