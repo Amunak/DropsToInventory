@@ -13,10 +13,11 @@ options:
     allow: true
 lists:
   blockFilter:
-    - DIAMOND_ORE
-    - GOLD_ORE
-    - LAPIS_ORE
-    - IRON_ORE
+#    Suggested blocks to add to blacklist filter:
+#    - DIAMOND_ORE
+#    - GOLD_ORE
+#    - LAPIS_ORE
+#    - IRON_ORE
   allowedEntities:
   # a player
     - PLAYER
