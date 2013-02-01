@@ -141,6 +141,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         leftover = player.getInventory().addItem(drop.toArray(new ItemStack[0]));
 
         for (Map.Entry<Integer, ItemStack> entry : leftover.entrySet()) {
+            log.fine("dropping leftover: " + entry.getValue().getType());
             player.getWorld().dropItemNaturally(leftoverDropLocation, entry.getValue());
         }
     }

@@ -101,11 +101,17 @@ public final class BlockBreakEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
         log.fine(event.getPlayer().getName() + " broke " + event.getBlock().getType());
+        log.fine("use safe blocks? " + useSafeBlocks);
+        log.fine("is this block safe? " + safeBlocks.contains(event.getBlock().getType().toString()));
+        log.fine("fix enchantment bug? " + fixEnchantmentBug);
+        log.fine("has enchant bug present? " + enchantBugPresent(event));
+        log.fine("what filter mode is set? " + filterMode);
+        log.fine("is this block ? " + filterMode);
         if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)
                 && (!useSafeBlocks || safeBlocks.contains(event.getBlock().getType().toString()))
                 && (!fixEnchantmentBug || !enchantBugPresent(event))
                 && (BlockFilter.isEligible(event.getBlock().getType(), blockFilter, filterMode))) {
-            log.fine("dropping " + event.getBlock().getType() + " to inventory of " + event.getPlayer().getName());
+            log.fine("dropping drop of " + event.getBlock().getType() + " to inventory of " + event.getPlayer().getName());
             plugin.moveDropToInventory(event.getPlayer(), event.getBlock().getDrops(event.getPlayer().getItemInHand()), event.getExpToDrop(), event.getBlock().getLocation());
             /* event.getBlock().getDrops().clear(); //bugged
              * event.setExpToDrop(0);
@@ -206,7 +212,7 @@ public final class BlockBreakEventListener implements Listener {
          * @return
          */
         public static Boolean isEligible(Material mat, List list, Integer mode) {
-            return isEligible(list.contains(mat.toString()), mode);
+            return list == null || isEligible(list.contains(mat.toString()), mode);
         }
     }
 }
