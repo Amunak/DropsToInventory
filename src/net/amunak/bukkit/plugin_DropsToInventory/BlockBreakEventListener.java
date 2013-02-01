@@ -48,7 +48,7 @@ public final class BlockBreakEventListener implements Listener {
     public BlockBreakEventListener(DropsToInventory p) {
         plugin = p;
         log = new Log(plugin);
-//        log.raiseFineLevel = true;
+        log.raiseFineLevel = plugin.config.getBoolean("options.general.verboseLogging");
         log.fine("registering BlockBreakEventListener");
 
         filterMode = BlockFilter.fromString(plugin.config.getString("options.blocks.filterMode"));

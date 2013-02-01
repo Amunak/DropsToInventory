@@ -2,6 +2,7 @@ options:
   general:
     checkVersion: true
     supplySound: true
+    verboseLogging: false
   blocks:
     allow: true
     filterMode: blacklist

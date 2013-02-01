@@ -51,14 +51,15 @@ public class DropsToInventory extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         log = new Log(this);
-//        log.raiseFineLevel = true;
-        log.fine("Plugin enabled");
-        log.fine("Fine logging will be seen");
 
         random = new Random();
 
         this.saveDefaultConfig();
         config = this.getConfig();
+        
+        log.raiseFineLevel = config.getBoolean("options.general.verboseLogging");
+        log.fine("Fine logging will be seen");
+        
         supplySound = config.getBoolean("options.general.supplySound");
         allowedEntities = config.getStringList("lists.allowedEntities");
         Common.fixEnumLists(allowedEntities);
