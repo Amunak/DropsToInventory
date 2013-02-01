@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -63,7 +65,7 @@ public final class BlockBreakEventListener implements Listener {
         if (useSafeBlocks) {
             safeBlocks = plugin.config.getStringList("lists.safeBlocks");
             Common.fixEnumLists(safeBlocks);
-        }        
+        }
 
         if (fixItemDurability) {
             log.fine("we will try to fix item durability bug");
@@ -118,7 +120,7 @@ public final class BlockBreakEventListener implements Listener {
              */
             event.setCancelled(true);
             event.getBlock().setTypeId(Material.AIR.getId());
-            recalculateDurability(event.getPlayer().getItemInHand());
+            recalculateDurability(event.getPlayer());
         }
     }
 
@@ -141,20 +143,45 @@ public final class BlockBreakEventListener implements Listener {
      * enchant is applied if necessary. This works only for BLOCK BREAKS with
      * SWORDS, PICKAXES, AXES AND SHOVELS!
      *
-     * @param item the item durability is counter on
+     * @param player player holding the item
      */
-    private void recalculateDurability(ItemStack item) {
+    private void recalculateDurability(Player player) {
+        ItemStack item = player.getItemInHand();
         Integer enchantLevel = item.getEnchantmentLevel(Enchantment.DURABILITY);
+        Integer random = plugin.random.nextInt(100);
+        log.fine("fix item durability? " + fixItemDurability);
+        log.fine("durability enchant check: rnd(" + random + ") <= 100 / (el(" + enchantLevel + ") + 1)");
         if (fixItemDurability
                 && durabilityFixAppliedItems.contains(item.getType())
                 //counting with durability enchant:
-                && (enchantLevel == 0 || (plugin.random.nextInt(100) <= 100 / (enchantLevel + 1)))) {
+                && (enchantLevel == 0 || (random <= 100 / (enchantLevel + 1)))) {
             log.fine("trying to fix durability on " + item.getType() + " with durability enchant " + enchantLevel);
+            log.fine("durability is " + item.getDurability() + " of " + item.getType().getMaxDurability());
             if (durabilityFixSwords.contains(item.getType())) {
-                item.setDurability((short) (item.getDurability() + 2));
+                if ((item.getDurability() + 2) >= item.getType().getMaxDurability()) {
+                    log.fine("max durability exceeded, removing item");
+                    player.getInventory().clear(player.getInventory().getHeldItemSlot());
+                    if(plugin.supplySound)
+                    {
+                        player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1.0F, (byte)1);
+                    }
+                } else {
+                    item.setDurability((short) (item.getDurability() + 2));
+                }
             } else {
-                item.setDurability((short) (item.getDurability() + 1));
+                if ((item.getDurability() + 1) >= item.getType().getMaxDurability()) {
+                    log.fine("max durability exceeded, removing item");
+                    player.getInventory().clear(player.getInventory().getHeldItemSlot());
+                    if(plugin.supplySound)
+                    {
+                        player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1.0F, (byte)1);
+                    }
+                } else {
+                    item.setDurability((short) (item.getDurability() + 1));
+                }
             }
+            player.updateInventory();
+            log.fine("new durability is " + item.getDurability());
         }
     }
 
