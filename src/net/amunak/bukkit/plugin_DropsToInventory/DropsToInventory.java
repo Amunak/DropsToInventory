@@ -87,7 +87,7 @@ public class DropsToInventory extends JavaPlugin implements Listener {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDeath(EntityDeathEvent event) {
         Player killer;
         killer = event.getEntity().getKiller();

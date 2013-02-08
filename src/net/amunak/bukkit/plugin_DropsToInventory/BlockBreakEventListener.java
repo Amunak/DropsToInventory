@@ -100,7 +100,7 @@ public final class BlockBreakEventListener implements Listener {
         log.fine("BlockBreakEventListener registered");
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
         log.fine(event.getPlayer().getName() + " broke " + event.getBlock().getType());
         log.fine("use safe blocks? " + useSafeBlocks);
