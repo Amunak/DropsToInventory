@@ -58,7 +58,6 @@ lists:
     - VILLAGER
   safeBlocks:
     - STONE
-    - GRASS
     - DIRT
     - COBBLESTONE
     - WOOD
@@ -69,7 +68,6 @@ lists:
     - IRON_ORE
     - COAL_ORE
     - LOG
-    - LEAVES
     - SPONGE
     - GLASS
     - LAPIS_ORE
@@ -119,8 +117,6 @@ lists:
     - REDSTONE_TORCH_OFF
     - REDSTONE_TORCH_ON
     - STONE_BUTTON
-    - SNOW
-    - SNOW_BLOCK
     - CLAY
     - JUKEBOX
     - FENCE
@@ -137,7 +133,6 @@ lists:
     - HUGE_MUSHROOM_2
     - IRON_FENCE
     - MELON_BLOCK
-    - VINE
     - FENCE_GATE
     - BRICK_STAIRS
     - SMOOTH_STAIRS
