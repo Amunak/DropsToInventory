@@ -68,7 +68,7 @@ public final class Log {
             }
         }
         if (forceConsole || !(player instanceof Player)) {
-            if (raiseFineLevel && (level.intValue() < Level.INFO.intValue())) {
+            if (this.raiseFineLevel && (level.intValue() < Level.INFO.intValue())) {
                 level = Level.INFO;
             }
             log.log(level, consolePrefix + message);
