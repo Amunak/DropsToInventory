@@ -1,4 +1,4 @@
-package net.amunak.bukkit.plugin_DropsToInventory;
+package net.amunak.bukkit.dropstoinventory;
 
 /**
  * Copyright 2013 Jiří Barouš
