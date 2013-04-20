@@ -51,7 +51,7 @@ public final class CheckVersion {
         log.info(player, "Checking for updates...", true);
 
         try {
-            u = new URL("http://mcplugins.amunak.net/query.php?v=" + version + "&p=" + plugin.getDescription().getName());
+            u = new URL("http://mc.amunak.net/query.php?v=" + version + "&p=" + plugin.getDescription().getName());
             is = u.openStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
