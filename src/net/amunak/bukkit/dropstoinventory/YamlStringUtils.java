@@ -49,7 +49,7 @@ public class YamlStringUtils {
         ss = ss.replace("$Gray$", ChatColor.GRAY.toString());
         ss = ss.replace("$Green$", ChatColor.GREEN.toString());
         ss = ss.replace("$Italic$", ChatColor.ITALIC.toString());
-        ss = ss.replace("$LightPurple", ChatColor.LIGHT_PURPLE.toString());
+        ss = ss.replace("$LightPurple$", ChatColor.LIGHT_PURPLE.toString());
         ss = ss.replace("$Magic$", ChatColor.MAGIC.toString());
         ss = ss.replace("$Red$", ChatColor.RED.toString());
         ss = ss.replace("$Reset$", ChatColor.RESET.toString());
