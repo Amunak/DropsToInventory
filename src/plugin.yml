@@ -1,4 +1,4 @@
 name: DropsToInventory
-version: 1.0
+version: 2.0
 description: Never have to pick up blocks again!
 main: net.amunak.bukkit.dropstoinventory.DropsToInventory
