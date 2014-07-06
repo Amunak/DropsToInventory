@@ -57,6 +57,9 @@ public class BreakListener implements Listener {
                 return;
             }
         }
+        if(!(isFull(event.getPlayer()))) {
+            return;
+        }
         event.setCancelled(true);
         Player p = event.getPlayer();
         ItemStack i = p.getItemInHand();
@@ -114,6 +117,7 @@ public class BreakListener implements Listener {
                         i.setDurability((short) (i.getDurability() - damage));
                         p.getInventory().addItem(new ItemStack(330, 1));
                     } else {
+                        Bukkit.getLogger().info("Entered other door loop");
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
                         i.setDurability((short) (i.getDurability() - damage));
                         p.getInventory().addItem(new ItemStack(324, 1));
@@ -297,6 +301,9 @@ public class BreakListener implements Listener {
         if(i.getDurability() == 0) {
             i.setType(Material.AIR);
             p.playSound(p.getLocation(), Sound.ITEM_BREAK, 1.0F, 1.0F);
+            if(expToDrop > 0) {
+                p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.0f);
+            }
         }
     }
 
@@ -307,9 +314,23 @@ public class BreakListener implements Listener {
             return false;
     }
 
+    private static boolean isFull(Player p) {
+        boolean hasEmpty = false;
+        for(ItemStack isss : p.getInventory()) {
+            if(isss == null) {
+                hasEmpty = true;
+                break;
+            }
+        }
+        if(hasEmpty)
+            return false;
+        else
+            return true;
+    }
+
     private static boolean shouldAdd(Material mat, ItemStack is, Player p) {
         if(p.getGameMode() == GameMode.CREATIVE)
-            return true;
+            return false;
         //Tool providings done by: minecraft.gamepedia.com/Digging#Blocks_by_hardness
         if(mat == Material.BEDROCK || mat == Material.COMMAND || mat == Material.ENDER_PORTAL || mat == Material.ENDER_PORTAL_FRAME || mat == Material.LAVA || mat == Material.STATIONARY_LAVA || mat == Material.WATER || mat == Material.STATIONARY_WATER) {
             return false;
