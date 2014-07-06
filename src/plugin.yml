@@ -1,7 +1,4 @@
-name: DropsToinventory
+name: DropsToInventory
+version: 1.0
+description: Never have to pick up blocks again!
 main: net.amunak.bukkit.dropstoinventory.DropsToInventory
-version: 1.2.7
-description: This plugin makes some dropped items (configurable) from broken blocks appear in players inventory instead of on ground
-website: http://dev.bukkit.org/server-mods/drops-to-inventory/
-author: Amunak
-load: POSTWORLD

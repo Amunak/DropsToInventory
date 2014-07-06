@@ -1,164 +1,42 @@
-options:
-  general:
-    checkVersion: true
-    supplySound: true
-    verboseLogging: false
-  blocks:
-    allow: true
-    filterMode: blacklist
-    useOnlySafeBlocks: true
-    fixItemDurability: true
-    ignoreEnchantmentBug: false
-  entities:
-    allow: true
-lists:
-  blockFilter:
-#    Suggested blocks to add to blacklist filter:
-#    - DIAMOND_ORE
-#    - GOLD_ORE
-#    - LAPIS_ORE
-#    - IRON_ORE
-  allowedEntities:
-  # a player
-    - PLAYER
-  # general entities
-    - PAINTING
-    - ITEM_FRAME
-    - MINECART
-    - BOAT
-  # mobs
-    - CREEPER
-    - SKELETON
-    - SPIDER
-    - GIANT
-    - ZOMBIE
-    - SLIME
-    - GHAST
-    - PIG_ZOMBIE
-    - ENDERMAN
-    - CAVE_SPIDER
-    - SILVERFISH
-    - BLAZE
-    - MAGMA_CUBE
-  #  - ENDER_DRAGON
-    - WITHER
-    - BAT
-    - WITCH
-  # animals
-    - PIG
-    - SHEEP
-    - COW
-    - CHICKEN
-    - SQUID
-    - WOLF
-    - MUSHROOM_COW
-    - SNOWMAN
-    - OCELOT
-    - IRON_GOLEM
-    - VILLAGER
-  safeBlocks:
-    - STONE
-    - DIRT
-    - COBBLESTONE
-    - WOOD
-    - SAPLING
-    - SAND
-    - GRAVEL
-    - GOLD_ORE
-    - IRON_ORE
-    - COAL_ORE
-    - LOG
-    - SPONGE
-    - GLASS
-    - LAPIS_ORE
-    - LAPIS_BLOCK
-    - DISPENSER
-    - SANDSTONE
-    - NOTE_BLOCK
-    - POWERED_RAIL
-    - DETECTOR_RAIL
-    - WEB
-    - LONG_GRASS
-    - DEAD_BUSH
-    - WOOL
-    - YELLOW_FLOWER
-    - RED_ROSE
-    - BROWN_MUSHROOM
-    - RED_MUSHROOM
-    - GOLD_BLOCK
-    - IRON_BLOCK
-    - DOUBLE_STEP
-    - STEP
-    - BRICK
-    - TNT
-    - BOOKSHELF
-    - MOSSY_COBBLESTONE
-    - OBSIDIAN
-    - TORCH
-    - WOOD_STAIRS
-    - CHEST
-    - REDSTONE_WIRE
-    - DIAMOND_ORE
-    - DIAMOND_BLOCK
-    - WORKBENCH
-    - SOIL
-    - FURNACE
-    - BURNING_FURNACE
-    - SIGN_POST
-    - LADDER
-    - RAILS
-    - COBBLESTONE_STAIRS
-    - WALL_SIGN
-    - LEVER
-    - STONE_PLATE
-    - WOOD_PLATE
-    - REDSTONE_ORE
-    - GLOWING_REDSTONE_ORE
-    - REDSTONE_TORCH_OFF
-    - REDSTONE_TORCH_ON
-    - STONE_BUTTON
-    - CLAY
-    - JUKEBOX
-    - FENCE
-    - PUMPKIN
-    - NETHERRACK
-    - SOUL_SAND
-    - GLOWSTONE
-    - JACK_O_LANTERN
-    - DIODE_BLOCK_OFF
-    - DIODE_BLOCK_ON
-    - TRAP_DOOR
-    - SMOOTH_BRICK
-    - HUGE_MUSHROOM_1
-    - HUGE_MUSHROOM_2
-    - IRON_FENCE
-    - MELON_BLOCK
-    - FENCE_GATE
-    - BRICK_STAIRS
-    - SMOOTH_STAIRS
-    - MYCEL
-    - WATER_LILY
-    - NETHER_BRICK
-    - NETHER_FENCE
-    - NETHER_BRICK_STAIRS
-    - ENCHANTMENT_TABLE
-    - BREWING_STAND
-    - CAULDRON
-    - ENDER_STONE
-    - REDSTONE_LAMP_OFF
-    - REDSTONE_LAMP_ON
-    - WOOD_DOUBLE_STEP
-    - WOOD_STEP
-    - SANDSTONE_STAIRS
-    - EMERALD_ORE
-    - ENDER_CHEST
-    - TRIPWIRE_HOOK
-    - TRIPWIRE
-    - EMERALD_BLOCK
-    - SPRUCE_WOOD_STAIRS
-    - BIRCH_WOOD_STAIRS
-    - JUNGLE_WOOD_STAIRS
-    - COMMAND
-    - BEACON
-    - COBBLE_WALL
-    - WOOD_BUTTON
+#                        .----------------.  .----------------.  .----------------.  .----------------.  .----------------.
+#                       | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
+#                       | |  ________    | || |  _______     | || |     ____     | || |   ______     | || |    _______   | |
+#                       | | |_   ___ `.  | || | |_   __ \    | || |   .'    `.   | || |  |_   __ \   | || |   /  ___  |  | |
+#                       | |   | |   `. \ | || |   | |__) |   | || |  /  .--.  \  | || |    | |__) |  | || |  |  (__ \_|  | |
+#                       | |   | |    | | | || |   |  __ /    | || |  | |    | |  | || |    |  ___/   | || |   '.___`-.   | |
+#                       | |  _| |___.' / | || |  _| |  \ \_  | || |  \  `--'  /  | || |   _| |_      | || |  |`\____) |  | |
+#                       | | |________.'  | || | |____| |___| | || |   `.____.'   | || |  |_____|     | || |  |_______.'  | |
+#                       | |              | || |              | || |              | || |              | || |              | |
+#                       | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
+#                        '----------------'  '----------------'  '----------------'  '----------------'  '----------------'
+#                                                        .----------------.  .----------------.
+#                                                       | .--------------. || .--------------. |
+#                                                       | |  _________   | || |     ____     | |
+#                                                       | | |  _   _  |  | || |   .'    `.   | |
+#                                                       | | |_/ | | \_|  | || |  /  .--.  \  | |
+#                                                       | |     | |      | || |  | |    | |  | |
+#                                                       | |    _| |_     | || |  \  `--'  /  | |
+#                                                       | |   |_____|    | || |   `.____.'   | |
+#                                                       | |              | || |              | |
+#                                                       | '--------------' || '--------------' |
+#                                                        '----------------'  '----------------'
+# .----------------.  .-----------------. .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .----------------.
+#| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
+#| |     _____    | || | ____  _____  | || | ____   ____  | || |  _________   | || | ____  _____  | || |  _________   | || |     ____     | || |  _______     | || |  ____  ____  | |
+#| |    |_   _|   | || ||_   \|_   _| | || ||_  _| |_  _| | || | |_   ___  |  | || ||_   \|_   _| | || | |  _   _  |  | || |   .'    `.   | || | |_   __ \    | || | |_  _||_  _| | |
+#| |      | |     | || |  |   \ | |   | || |  \ \   / /   | || |   | |_  \_|  | || |  |   \ | |   | || | |_/ | | \_|  | || |  /  .--.  \  | || |   | |__) |   | || |   \ \  / /   | |
+#| |      | |     | || |  | |\ \| |   | || |   \ \ / /    | || |   |  _|  _   | || |  | |\ \| |   | || |     | |      | || |  | |    | |  | || |   |  __ /    | || |    \ \/ /    | |
+#| |     _| |_    | || | _| |_\   |_  | || |    \ ' /     | || |  _| |___/ |  | || | _| |_\   |_  | || |    _| |_     | || |  \  `--'  /  | || |  _| |  \ \_  | || |    _|  |_    | |
+#| |    |_____|   | || ||_____|\____| | || |     \_/      | || | |_________|  | || ||_____|\____| | || |   |_____|    | || |   `.____.'   | || | |____| |___| | || |   |______|   | |
+#| |              | || |              | || |              | || |              | || |              | || |              | || |              | || |              | || |              | |
+#| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
+# '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'
+
+#Sorry for the cheesy ascii art i just had too.
+
+ChatPrefix: $Bold$$White$[$Gold$DTI$White$]$Colon$
+
+#NOTE: Blacklisted blocks will just be handled defaultly.
+blacklistedBlocks:
+  - Bedrock
+#Bedrock is not breakable by default I just added it to show you where things go. You can delete if you want.

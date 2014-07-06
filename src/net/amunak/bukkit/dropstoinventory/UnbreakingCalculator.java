@@ -1,7 +1,7 @@
 package net.amunak.bukkit.dropstoinventory;
 
 /**
- * Copyright 2013 Jiří Barouš
+ * Copyright 2014 Eric Coan
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,26 +17,30 @@ package net.amunak.bukkit.dropstoinventory;
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.List;
+import java.util.Random;
 
 /**
- * contains common static methods
- *
- * @author Amunak
+ * Creator: Revolution
+ * Project: DropsToInv
+ * Date: 6/16/2014, 1:10 PM
+ * Usage: Calculates Unbreaking Damage
  */
-public final class Common {
+public class UnbreakingCalculator {
 
     /**
-     * fixes bukkit enumeration lists for easier user input
-     *
-     * @param lists array of List<String>
+     * This is the official formula from minecraft.gamepedia.com/Enchanting
+     * @param level of unbreaking
+     * @return block damage
      */
-    public static void fixEnumLists(List<String>... lists) {
-        for (List<String> list : lists) {
-            for (String string : list) {
-                string = string.toUpperCase();
-                string = string.replace(" ", "_");
-            }
+    public static int calculateDamage(int level) {
+        int returnValue = 0;
+        int percentage = (100/(level + 1));
+        Random rand = new Random();
+        int chance = rand.nextInt(100);
+        if(percentage > chance) {
+            return 0;
+        }else {
+            return 1;
         }
     }
 }
