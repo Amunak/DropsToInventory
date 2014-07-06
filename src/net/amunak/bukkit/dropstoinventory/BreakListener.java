@@ -57,9 +57,6 @@ public class BreakListener implements Listener {
                 return;
             }
         }
-        if(!(isFull(event.getPlayer()))) {
-            return;
-        }
         event.setCancelled(true);
         Player p = event.getPlayer();
         ItemStack i = p.getItemInHand();
@@ -315,17 +312,11 @@ public class BreakListener implements Listener {
     }
 
     private static boolean isFull(Player p) {
-        boolean hasEmpty = false;
-        for(ItemStack isss : p.getInventory()) {
-            if(isss == null) {
-                hasEmpty = true;
-                break;
-            }
-        }
-        if(hasEmpty)
-            return false;
-        else
-            return true;
+        if(p.getInventory().firstEmpty() == -1) {
+           return true;
+       }else {
+           return false;
+       }
     }
 
     private static boolean shouldAdd(Material mat, ItemStack is, Player p) {
