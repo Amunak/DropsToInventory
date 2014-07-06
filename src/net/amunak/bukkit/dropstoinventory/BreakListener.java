@@ -114,7 +114,6 @@ public class BreakListener implements Listener {
                         i.setDurability((short) (i.getDurability() - damage));
                         p.getInventory().addItem(new ItemStack(330, 1));
                     } else {
-                        Bukkit.getLogger().info("Entered other door loop");
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
                         i.setDurability((short) (i.getDurability() - damage));
                         p.getInventory().addItem(new ItemStack(324, 1));
