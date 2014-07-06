@@ -26,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
 import java.util.Random;
@@ -56,6 +57,9 @@ public class BreakListener implements Listener {
             if (blackListedBlocks.contains(mat.name())) {
                 return;
             }
+        }
+        if(isFull(event.getPlayer(), event.getBlock().getType())) {
+            return;
         }
         event.setCancelled(true);
         Player p = event.getPlayer();
@@ -311,12 +315,23 @@ public class BreakListener implements Listener {
             return false;
     }
 
-    private static boolean isFull(Player p) {
-        if(p.getInventory().firstEmpty() == -1) {
-           return true;
-       }else {
-           return false;
-       }
+    private static boolean isFull(Player p, Material mat) {
+        int count = 0;
+        for (int i=0; i<= p.getInventory().getSize() - 1; i++) {
+            try {
+                if(p.getInventory().getContents()[i].getType() == Material.AIR) {}else {
+                    if(p.getInventory().getContents()[i].getType() == mat && p.getInventory().getContents()[i]
+                            .getAmount() < p.getInventory().getContents()[i].getMaxStackSize()) {}else {
+                        count++;
+                    }
+                }
+            }catch(NullPointerException e) {}
+        }
+        if(count == p.getInventory().getSize()) {
+            return true;
+        }else {
+            return false;
+        }
     }
 
     private static boolean shouldAdd(Material mat, ItemStack is, Player p) {
