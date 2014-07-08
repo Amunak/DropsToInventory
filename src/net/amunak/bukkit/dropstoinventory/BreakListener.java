@@ -26,8 +26,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -40,10 +40,12 @@ import java.util.Random;
 public class BreakListener implements Listener {
 
     public static List<String> blackListedBlocks;
+    public static List<Player> playersTurnedOff;
     private static boolean blackList = false;
 
     public void getIntialList() {
         blackListedBlocks = DropsToInventory.getInstance().getConfig().getStringList("blacklistedBlocks");
+        playersTurnedOff = new ArrayList<Player>();
         if(!(blackListedBlocks == null)) {
             blackList = true;
         }
@@ -58,7 +60,10 @@ public class BreakListener implements Listener {
                 return;
             }
         }
-        if(isFull(event.getPlayer(), event.getBlock().getType())) {
+        if (isFull(event.getPlayer(), event.getBlock().getType())) {
+            return;
+        }
+        if (playersTurnedOff.contains(event.getPlayer())) {
             return;
         }
         event.setCancelled(true);
@@ -70,6 +75,10 @@ public class BreakListener implements Listener {
         byte data = b.getData();
         boolean silk = i.containsEnchantment(Enchantment.SILK_TOUCH);
         if (!(shouldAdd(mat, i, p))) {
+            return;
+        }
+        if (p.getGameMode() == GameMode.CREATIVE) {
+            b.setType(Material.AIR);
             return;
         }
         int damage = 1;
@@ -112,13 +121,11 @@ public class BreakListener implements Listener {
             }else if (mat == Material.IRON_DOOR_BLOCK || mat == Material.WOODEN_DOOR || mat == Material.IRON_DOOR) {
                 Location l = SpecialBlockResolver.getDoor(b.getLocation());
                 if (l == null) {
-                    //Some reason iron doors aren't found?
                     if (mat == Material.IRON_DOOR_BLOCK || mat == Material.IRON_DOOR) {
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
                         i.setDurability((short) (i.getDurability() - damage));
                         p.getInventory().addItem(new ItemStack(330, 1));
                     } else {
-                        Bukkit.getLogger().info("Entered other door loop");
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
                         i.setDurability((short) (i.getDurability() - damage));
                         p.getInventory().addItem(new ItemStack(324, 1));
@@ -136,12 +143,10 @@ public class BreakListener implements Listener {
                         p.getInventory().addItem(new ItemStack(324, 1));
                     }
                 }
-            } else if (mat == Material.BED_BLOCK) {
+            }else if (mat == Material.BED_BLOCK) {
                 Location l = SpecialBlockResolver.getBed(b.getLocation());
                 if (l == null) {
                     b.setType(Material.AIR);
-
-                    //Fortune doesn't apply to this block calculate for Unbreaking though
                     i.setDurability((short) (i.getDurability() - damage));
                     p.getInventory().addItem(new ItemStack(355, 1));
                 } else {
@@ -152,6 +157,10 @@ public class BreakListener implements Listener {
                     b.setType(Material.AIR);
                     i.setDurability((short) (i.getDurability() - damage));
                     p.getInventory().addItem(new ItemStack(355, 1));
+                }
+            }else if(mat == Material.VINE) {
+                if(i.getType() == Material.SHEARS) {
+                    p.getInventory().addItem(new ItemStack(mat, 1));
                 }
             }
         }
@@ -309,13 +318,13 @@ public class BreakListener implements Listener {
     }
 
     private static boolean isSpecialBlock(Material mat) {
-        if(mat == Material.PISTON_BASE || mat == Material.PISTON_MOVING_PIECE || mat == Material.PISTON_STICKY_BASE || mat == Material.PISTON_BASE || mat == Material.IRON_DOOR_BLOCK || mat == Material.WOODEN_DOOR || mat == Material.BED_BLOCK || mat == Material.IRON_DOOR)
+        if(mat == Material.PISTON_BASE || mat == Material.PISTON_MOVING_PIECE || mat == Material.PISTON_STICKY_BASE || mat == Material.PISTON_BASE || mat == Material.IRON_DOOR_BLOCK || mat == Material.WOODEN_DOOR || mat == Material.BED_BLOCK || mat == Material.IRON_DOOR || mat == Material.VINE)
             return true;
         else
             return false;
     }
 
-    private static boolean isFull(Player p, Material mat) {
+    public static boolean isFull(Player p, Material mat) {
         int count = 0;
         for (int i=0; i<= p.getInventory().getSize() - 1; i++) {
             try {
@@ -335,8 +344,6 @@ public class BreakListener implements Listener {
     }
 
     private static boolean shouldAdd(Material mat, ItemStack is, Player p) {
-        if(p.getGameMode() == GameMode.CREATIVE)
-            return false;
         //Tool providings done by: minecraft.gamepedia.com/Digging#Blocks_by_hardness
         if(mat == Material.BEDROCK || mat == Material.COMMAND || mat == Material.ENDER_PORTAL || mat == Material.ENDER_PORTAL_FRAME || mat == Material.LAVA || mat == Material.STATIONARY_LAVA || mat == Material.WATER || mat == Material.STATIONARY_WATER) {
             return false;
