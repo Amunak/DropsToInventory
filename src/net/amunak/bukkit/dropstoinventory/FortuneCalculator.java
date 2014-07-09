@@ -38,57 +38,77 @@ public class FortuneCalculator {
      * @return the number of blocks dropped.
      */
     public static int numDroppedFromFortune(int fortuneLevel, Material typeOfBlock, int returnValue) {
-        if(typeOfBlock == Material.REDSTONE || typeOfBlock == Material.REDSTONE_ORE || typeOfBlock == Material.REDSTONE_BLOCK || typeOfBlock == Material.CARROT || typeOfBlock == Material.MELON || typeOfBlock == Material.MELON_BLOCK || typeOfBlock == Material.NETHER_WARTS || typeOfBlock == Material.POTATO || typeOfBlock == Material.SEEDS || typeOfBlock == Material.LONG_GRASS) {
-            if(typeOfBlock == Material.REDSTONE) {
-                for (int i = 0; i < fortuneLevel; i++) {
-                    returnValue++;
-                    if (returnValue == 4)
-                        break;
+        if(!(fortuneLevel > 3)) {
+            if (typeOfBlock == Material.REDSTONE || typeOfBlock == Material.REDSTONE_ORE || typeOfBlock == Material.REDSTONE_BLOCK || typeOfBlock == Material.CARROT || typeOfBlock == Material.MELON || typeOfBlock == Material.MELON_BLOCK || typeOfBlock == Material.NETHER_WARTS || typeOfBlock == Material.POTATO || typeOfBlock == Material.SEEDS || typeOfBlock == Material.LONG_GRASS) {
+
+                if (typeOfBlock == Material.REDSTONE) {
+                    for (int i = 0; i < fortuneLevel; i++) {
+                        returnValue++;
+                        if (returnValue == 4)
+                            break;
+                    }
                 }
-            }else if (typeOfBlock == Material.MELON || typeOfBlock == Material.MELON_BLOCK) {
-                for (int i = 0; i < fortuneLevel; i++) {
-                    returnValue++;
-                    if (returnValue == 9)
-                        break;
+                else if (typeOfBlock == Material.MELON || typeOfBlock == Material.MELON_BLOCK) {
+                    for (int i = 0; i < fortuneLevel; i++) {
+                        returnValue++;
+                        if (returnValue == 9)
+                            break;
+                    }
                 }
-            }else if(typeOfBlock == Material.LONG_GRASS) {
-                for(int i = 0; i < fortuneLevel; i++)
-                    returnValue = returnValue + 2;
-            }else {
-                for(int i = 0; i < fortuneLevel; i++)
-                    returnValue++;
+                else if (typeOfBlock == Material.LONG_GRASS) {
+                    for (int i = 0; i < fortuneLevel; i++)
+                        returnValue = returnValue + 2;
+                }
+                else {
+                    for (int i = 0; i < fortuneLevel; i++)
+                        returnValue++;
+                }
             }
+            else {
+                Random rand = new Random();
+                int result = rand.nextInt(100);
+                if (fortuneLevel == 1) {
+                    int chance = 33;
+                    if (chance > result) {
+                        return returnValue * 2;
+                    }
+                }
+                else if (fortuneLevel == 2) {
+                    int chance = 50;
+                    if (chance > result) {
+                        if (result < 25) {
+                            returnValue = returnValue * 3;
+                        }
+                        else {
+                            returnValue = returnValue * 2;
+                        }
+                    }
+                }
+                else {
+                    int chance = 60;
+                    if (chance > result) {
+                        if (result <= 20) {
+                            returnValue = returnValue * 4;
+                        }
+                        else if (result > 20 && result <= 40) {
+                            returnValue = returnValue * 3;
+                        }
+                        else {
+                            returnValue = returnValue * 2;
+                        }
+                    }
+                }
+            }
+            return returnValue;
         }else {
-            Random rand = new Random();
-            int result = rand.nextInt(100);
-            if(fortuneLevel == 1)  {
-                int chance = 33;
-                if(chance > result) {
-                    return returnValue * 2;
-                }
-            }else if(fortuneLevel == 2) {
-                int chance = 50;
-                if(chance > result) {
-                    if(result < 25) {
-                        returnValue = returnValue * 3;
-                    }else {
-                        returnValue = returnValue * 2;
-                    }
-                }
-            }else {
-                int chance = 60;
-                if(chance > result) {
-                    if(result <= 20) {
-                        returnValue = returnValue * 4;
-                    }else if(result > 20 && result <= 40) {
-                        returnValue = returnValue * 3;
-                    }else {
-                        returnValue = returnValue * 2;
-                    }
-                }
-            }
+            Random ran = new Random();
+            int j = ran.nextInt(fortuneLevel);
+
+            if(j < 0)
+                j = 0;
+
+            return j;
         }
-        return returnValue;
     }
 
     /**

@@ -40,3 +40,7 @@ ChatPrefix: $Bold$$White$[$Gold$DTI$White$]$Colon$
 blacklistedBlocks:
   - Bedrock
 #Bedrock is not breakable by default I just added it to show you where things go. You can delete if you want.
+
+#Blacklisted players.
+blacklistedPlayers:
+  - Notch

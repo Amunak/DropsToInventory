@@ -41,15 +41,17 @@ import java.util.Random;
 public class BreakListener implements Listener {
 
     public static List<String> blackListedBlocks;
-    public static List<Player> playersTurnedOff;
+    public static List<String> playersTurnedOff;
     private static boolean blackList = false;
 
     public void getIntialList() {
         blackListedBlocks = DropsToInventory.getInstance().getConfig().getStringList("blacklistedBlocks");
-        playersTurnedOff = new ArrayList<Player>();
+        playersTurnedOff = DropsToInventory.getInstance().getConfig().getStringList("blacklistedPlayers");
         if(!(blackListedBlocks == null)) {
             blackList = true;
         }
+        if(playersTurnedOff == null)
+            playersTurnedOff = new ArrayList<String>();
     }
 
     private boolean wgBreak(Location loc, Player p) {
@@ -87,7 +89,7 @@ public class BreakListener implements Listener {
         if (isFull(event.getPlayer(), event.getBlock().getType())) {
             return;
         }
-        if (playersTurnedOff.contains(event.getPlayer())) {
+        if (playersTurnedOff.contains(event.getPlayer().getName())) {
             return;
         }
         if(DropsToInventory.hFactions) {
