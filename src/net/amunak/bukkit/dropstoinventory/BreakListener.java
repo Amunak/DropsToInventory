@@ -340,7 +340,7 @@ public class BreakListener implements Listener {
             p.getInventory().addItem(new ItemStack(mat, 1, data));
             i.setDurability((short) (i.getDurability() - damage));
         }
-        p.setTotalExperience((p.getTotalExperience() + expToDrop));
+        p.giveExp(expToDrop);
         if(i.getDurability() == 0) {
             i.setType(Material.AIR);
             p.playSound(p.getLocation(), Sound.ITEM_BREAK, 1.0F, 1.0F);
