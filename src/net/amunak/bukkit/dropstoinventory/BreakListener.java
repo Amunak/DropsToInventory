@@ -26,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,29 @@ public class BreakListener implements Listener {
         }
     }
 
+    private boolean wgBreak(Location loc, Player p) {
+        try {
+            Object obj = Class.forName("com.sk89q.worldguard.bukkit.WorldGuardPlugin");
+            Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
+            if(plugin == null || !(plugin.getClass().isInstance(obj))) {
+                return true;
+            }
+            com.sk89q.worldguard.bukkit.WorldGuardPlugin pl = (com.sk89q.worldguard.bukkit.WorldGuardPlugin) plugin;
+            return pl.canBuild(p, p.getWorld().getBlockAt((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()));
+        }catch(Exception e) {}
+        return true;
+    }
+
+    private boolean fBreak(Location loc, Player p) {
+        com.massivecraft.factions.entity.Faction f = com.massivecraft.factions.entity.UPlayer.get(p).getFaction();
+        com.massivecraft.factions.entity.Faction ff = com.massivecraft.factions.entity.BoardColls.get().getFactionAt(
+                com.massivecraft.mcore.ps.PS.valueOf(loc.getBlock()));
+        if(ff != null) {
+            return ff.getId() == f.getId();
+        }
+        return true;
+    }
+
     //Set to lowest priority so worldguard and things run first
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -65,6 +89,13 @@ public class BreakListener implements Listener {
         }
         if (playersTurnedOff.contains(event.getPlayer())) {
             return;
+        }
+        if(DropsToInventory.hFactions) {
+            //Factions check
+            if(!(fBreak(event.getBlock().getLocation(), event.getPlayer()))) return;
+        }
+        if(DropsToInventory.hWorldGuard) {
+            if(!(wgBreak(event.getBlock().getLocation(), event.getPlayer()))) return;
         }
         event.setCancelled(true);
         Player p = event.getPlayer();
