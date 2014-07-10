@@ -79,18 +79,18 @@ public class CommandManager implements CommandExecutor {
                     return true;
                 }else if(args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off")) {
                     String UUID = senderr.getUniqueId().toString();
-                    List<String> currentBans = DropsToInventory.getInstance().getConfig().getStringList
-                            ("blacklistedPlayers");
+                    List<String> currentouts = DropsToInventory.getInstance().getConfig().getStringList
+                            ("optedOutPlayers");
                     if(args[0].equalsIgnoreCase("off")) {
-                        if (!(currentBans.contains(UUID))) {
-                            currentBans.add(UUID);
+                        if (!(currentouts.contains(UUID))) {
+                            currentouts.add(UUID);
                         }
                     }else {
-                        if(currentBans.contains(UUID)) {
-                            currentBans.remove(UUID);
+                        if(currentouts.contains(UUID)) {
+                            currentouts.remove(UUID);
                         }
                     }
-                    DropsToInventory.getInstance().getConfig().set("blacklistedPlayers", currentBans);
+                    DropsToInventory.getInstance().getConfig().set("blacklistedPlayers", currentouts);
                 }
             }
         }

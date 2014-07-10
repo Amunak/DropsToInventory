@@ -44,3 +44,7 @@ blacklistedBlocks:
 #Blacklisted players. Note this is kept through UUID's
 blacklistedPlayers:
   - 069a79f4-44e9-4726-a5be-fca90e38aaf5 #Notch's UUID
+
+#Players who turn this off for themselves
+optedOutPlayers:
+  - 069a79f4-44e9-4726-a5be-fca90e38aaf5 #Notch's UUID
