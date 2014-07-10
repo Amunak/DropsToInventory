@@ -41,6 +41,6 @@ blacklistedBlocks:
   - Bedrock
 #Bedrock is not breakable by default I just added it to show you where things go. You can delete if you want.
 
-#Blacklisted players.
+#Blacklisted players. Note this is kept through UUID's
 blacklistedPlayers:
-  - Notch
+  - 069a79f4-44e9-4726-a5be-fca90e38aaf5 #Notch's UUID

@@ -34,20 +34,23 @@ public class DropsToInventory extends JavaPlugin {
 
     private static DropsToInventory instance = null;
     private static BreakListener bl = null;
+    private CommandManager cm;
     public static boolean hFactions = false;
     public static boolean hWorldGuard = false;
 
     @Override
     public void onEnable() {
         instance = this;
+        this.saveDefaultConfig();
         bl = new BreakListener();
         bl.getIntialList();
         Bukkit.getPluginManager().registerEvents(bl, instance);
-        this.saveDefaultConfig();
         if(Bukkit.getPluginManager().isPluginEnabled("WorldGuard"))
             hWorldGuard = true;
         if(Bukkit.getPluginManager().isPluginEnabled("Factions"))
             hFactions = true;
+        cm = new CommandManager();
+        getCommand("dti").setExecutor(cm);
     }
 
     @Override

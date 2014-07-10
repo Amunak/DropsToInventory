@@ -89,7 +89,7 @@ public class BreakListener implements Listener {
         if (isFull(event.getPlayer(), event.getBlock().getType())) {
             return;
         }
-        if (playersTurnedOff.contains(event.getPlayer().getName())) {
+        if (playersTurnedOff.contains(event.getPlayer().getUniqueId().toString())) {
             return;
         }
         if(DropsToInventory.hFactions) {
@@ -124,10 +124,10 @@ public class BreakListener implements Listener {
                 Location l = SpecialBlockResolver.getPiston(b.getLocation());
                 if (l == null) {
                     if(mat == Material.PISTON_STICKY_BASE) {
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(29, 1));
                     }else {
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(33, 1));
                     }
                     b.setType(Material.AIR);
@@ -138,7 +138,7 @@ public class BreakListener implements Listener {
                         b.getDrops().clear();
                         bb.setType(Material.AIR);
                         b.setType(Material.AIR);
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(29, 1));
                     } else {
                         Block bb = l.getWorld().getBlockAt(l);
@@ -147,7 +147,7 @@ public class BreakListener implements Listener {
                         bb.setType(Material.AIR);
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
 
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(33, 1));
                     }
                 }
@@ -156,23 +156,23 @@ public class BreakListener implements Listener {
                 if (l == null) {
                     if (mat == Material.IRON_DOOR_BLOCK || mat == Material.IRON_DOOR) {
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(330, 1));
                     } else {
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(324, 1));
                     }
                 } else {
                     if (mat == Material.IRON_DOOR_BLOCK || mat == Material.IRON_DOOR) {
                         l.getWorld().getBlockAt(l).setType(Material.AIR);
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(330, 1));
                     } else {
                         l.getWorld().getBlockAt(l).setType(Material.AIR);
                         b.getWorld().getBlockAt(b.getLocation()).setType(Material.AIR);
-                        i.setDurability((short) (i.getDurability() - damage));
+                        i.setDurability((short) (i.getDurability() + damage));
                         p.getInventory().addItem(new ItemStack(324, 1));
                     }
                 }
@@ -180,7 +180,7 @@ public class BreakListener implements Listener {
                 Location l = SpecialBlockResolver.getBed(b.getLocation());
                 if (l == null) {
                     b.setType(Material.AIR);
-                    i.setDurability((short) (i.getDurability() - damage));
+                    i.setDurability((short) (i.getDurability() + damage));
                     p.getInventory().addItem(new ItemStack(355, 1));
                 } else {
                     Block bb = l.getWorld().getBlockAt(l);
@@ -188,12 +188,13 @@ public class BreakListener implements Listener {
                     b.getDrops().clear();
                     bb.setType(Material.AIR);
                     b.setType(Material.AIR);
-                    i.setDurability((short) (i.getDurability() - damage));
+                    i.setDurability((short) (i.getDurability() + damage));
                     p.getInventory().addItem(new ItemStack(355, 1));
                 }
             }else if(mat == Material.VINE) {
                 if(i.getType() == Material.SHEARS) {
                     p.getInventory().addItem(new ItemStack(mat, 1));
+                    i.setDurability((short) (i.getDurability() + damage));
                 }
             }
         }
@@ -238,7 +239,7 @@ public class BreakListener implements Listener {
                 else
                     p.getInventory().addItem(new ItemStack(Material.QUARTZ, returnAmount));
             }
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat == Material.GRAVEL) {
             Material gravOrFlint = null;
             if(i.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS)) {
@@ -259,44 +260,44 @@ public class BreakListener implements Listener {
             else
                 p.getInventory().addItem(new ItemStack(gravOrFlint, 1));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat == Material.CAKE_BLOCK) {
             p.getInventory().addItem(new ItemStack(Material.CAKE, 1));
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 18) {
             //Leaves
             if (silk)
                 p.getInventory().addItem(new ItemStack(18, 1, data));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 20) {
             if (silk)
                 p.getInventory().addItem(new ItemStack(20, 1));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat == Material.WEB) {
             if (i.getType() == Material.SHEARS || silk)
                 p.getInventory().addItem(new ItemStack(Material.WEB, 1));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 79) {
             //Ice Block
             if (silk)
                 p.getInventory().addItem(new ItemStack(79, 1));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 95) {
             //Stained glass
             if (silk)
                 p.getInventory().addItem(new ItemStack(95, 1, data));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 102) {
             //Glass pane
             if (silk)
                 p.getInventory().addItem(new ItemStack(102, 1));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat == Material.MELON_BLOCK) {
             int returnAmount = 4;
 
@@ -304,19 +305,19 @@ public class BreakListener implements Listener {
                 returnAmount = FortuneCalculator.numDroppedFromFortune(i.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS), mat, returnAmount);
 
             p.getInventory().addItem(new ItemStack(Material.MELON, returnAmount));
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 160) {
             //Stained glass pane
             if (silk)
                 p.getInventory().addItem(new ItemStack(160, 1, data));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 161) {
             //MOAR Leaves
             if (silk)
                 p.getInventory().addItem(new ItemStack(161, 1, data));
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat.getId() == 174) {
             //Packed ice
             if (silk)
@@ -324,7 +325,7 @@ public class BreakListener implements Listener {
             else
                 b.setType(Material.WATER);
 
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }else if(mat == Material.GRASS || mat == Material.STONE) {
             if(silk) {
                 p.getInventory().addItem(new ItemStack(mat, 1));
@@ -334,19 +335,19 @@ public class BreakListener implements Listener {
                 }else {
                     p.getInventory().addItem(new ItemStack(Material.COBBLESTONE, 1));
                 }
-                i.setDurability((short) (i.getDurability() - damage));
+                i.setDurability((short) (i.getDurability() + damage));
             }
         }else {
             p.getInventory().addItem(new ItemStack(mat, 1, data));
-            i.setDurability((short) (i.getDurability() - damage));
+            i.setDurability((short) (i.getDurability() + damage));
         }
         p.giveExp(expToDrop);
-        if(i.getDurability() == 0) {
+        if(i.getDurability() >= i.getType().getMaxDurability()) {
             i.setType(Material.AIR);
             p.playSound(p.getLocation(), Sound.ITEM_BREAK, 1.0F, 1.0F);
-            if(expToDrop > 0) {
-                p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.0f);
-            }
+        }
+        if(expToDrop > 0) {
+            p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.0f);
         }
     }
 
