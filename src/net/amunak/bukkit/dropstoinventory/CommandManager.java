@@ -69,10 +69,14 @@ public class CommandManager implements CommandExecutor {
                             ("blacklistedPlayers");
                     if(args[1].equalsIgnoreCase("off")) {
                         if (!(currentBans.contains(UUID))) {
+                            if(!(BreakListener.playersTurnedOff.contains(UUID)))
+                                BreakListener.playersTurnedOff.add(UUID);
                             currentBans.add(UUID);
                         }
                     }else {
                         if(currentBans.contains(UUID)) {
+                            if((BreakListener.playersTurnedOff.contains(UUID)))
+                                BreakListener.playersTurnedOff.add(UUID);
                             currentBans.remove(UUID);
                         }
                     }
