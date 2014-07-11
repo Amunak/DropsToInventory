@@ -20,11 +20,15 @@ public class DeathListener implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         List<ItemStack> drops = event.getDrops();
         Player killer = event.getEntity().getKiller();
-        for(ItemStack drop : drops) {
-            if(!BreakListener.playersTurnedOff.contains(killer.getUniqueId().toString()) &&
-                    !BreakListener.playeresOptedOut.contains(killer.getUniqueId().toString()) &&
-                    !BreakListener.isFull(killer, drop.getType())) {
-                killer.getInventory().addItem(drop);
+        boolean cancelled = false;
+        if(killer != null) {
+            for (ItemStack drop : drops) {
+                if (!BreakListener.playersTurnedOff.contains(killer.getUniqueId().toString()) &&
+                        !BreakListener.playeresOptedOut.contains(killer.getUniqueId().toString()) &&
+                        !BreakListener.isFull(killer, drop.getType())) {
+                    event.getDrops().remove(drop);
+                    killer.getInventory().addItem(drop);
+                }
             }
         }
     }

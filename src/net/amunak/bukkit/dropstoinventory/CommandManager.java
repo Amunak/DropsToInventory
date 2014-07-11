@@ -68,17 +68,15 @@ public class CommandManager implements CommandExecutor {
                     List<String> currentBans = DropsToInventory.getInstance().getConfig().getStringList
                             ("blacklistedPlayers");
                     if(args[1].equalsIgnoreCase("off")) {
-                        if (!(currentBans.contains(UUID))) {
-                            if(!(BreakListener.playersTurnedOff.contains(UUID)))
-                                BreakListener.playersTurnedOff.add(UUID);
+                        if (!(currentBans.contains(UUID)))
                             currentBans.add(UUID);
-                        }
+                        if(!(BreakListener.playersTurnedOff.contains(UUID)))
+                            BreakListener.playersTurnedOff.add(UUID);
                     }else {
-                        if(currentBans.contains(UUID)) {
-                            if((BreakListener.playersTurnedOff.contains(UUID)))
-                                BreakListener.playersTurnedOff.add(UUID);
+                        if(currentBans.contains(UUID))
                             currentBans.remove(UUID);
-                        }
+                        if((BreakListener.playersTurnedOff.contains(UUID)))
+                            BreakListener.playersTurnedOff.remove(UUID);
                     }
                     DropsToInventory.getInstance().getConfig().set("blacklistedPlayers", currentBans);
                 }
@@ -101,19 +99,17 @@ public class CommandManager implements CommandExecutor {
                     List<String> currentouts = DropsToInventory.getInstance().getConfig().getStringList
                             ("optedOutPlayers");
                     if(args[0].equalsIgnoreCase("off")) {
-                        if (!(currentouts.contains(UUID))) {
+                        if (!(currentouts.contains(UUID)))
                             currentouts.add(UUID);
-                            if(!(BreakListener.playeresOptedOut.contains(UUID)))
-                                BreakListener.playeresOptedOut.add(UUID);
-                        }
+                        if(!(BreakListener.playeresOptedOut.contains(UUID)))
+                            BreakListener.playeresOptedOut.add(UUID);
                     }else {
-                        if(currentouts.contains(UUID)) {
+                        if(currentouts.contains(UUID))
                             currentouts.remove(UUID);
-                            if(BreakListener.playeresOptedOut.contains(UUID))
-                                BreakListener.playeresOptedOut.remove(UUID);
-                        }
+                        if(BreakListener.playeresOptedOut.contains(UUID))
+                            BreakListener.playeresOptedOut.remove(UUID);
                     }
-                    DropsToInventory.getInstance().getConfig().set("blacklistedPlayers", currentouts);
+                    DropsToInventory.getInstance().getConfig().set("optedOutPlayers", currentouts);
                     return true;
                 }
             }
