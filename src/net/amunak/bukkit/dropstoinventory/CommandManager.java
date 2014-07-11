@@ -36,7 +36,17 @@ public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("dti")) {
-            if(args == null || args.length <= 0) {
+            try {
+                if(args.length == 0) {
+                    if (!(sender instanceof Player))
+                        return false;
+                    Player senderr = (Player) sender;
+                    if (senderr.hasPermission("dti.help")) {
+                        DropsToInventory.sendMessage(senderr, "Drops to Inventory. Use /dti help for help.");
+                    }
+                    return true;
+                }
+            }catch(NullPointerException e) {
                 if(!(sender instanceof  Player))
                     return false;
                 Player senderr = (Player) sender;
@@ -89,13 +99,18 @@ public class CommandManager implements CommandExecutor {
                     if(args[0].equalsIgnoreCase("off")) {
                         if (!(currentouts.contains(UUID))) {
                             currentouts.add(UUID);
+                            if(!(BreakListener.playeresOptedOut.contains(UUID)))
+                                BreakListener.playeresOptedOut.add(UUID);
                         }
                     }else {
                         if(currentouts.contains(UUID)) {
                             currentouts.remove(UUID);
+                            if(BreakListener.playeresOptedOut.contains(UUID))
+                                BreakListener.playeresOptedOut.remove(UUID);
                         }
                     }
                     DropsToInventory.getInstance().getConfig().set("blacklistedPlayers", currentouts);
+                    return true;
                 }
             }
         }
