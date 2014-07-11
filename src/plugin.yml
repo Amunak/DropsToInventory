@@ -1,5 +1,5 @@
 name: DropsToInventory
-version: 2.0.2
+version: 2.1
 description: Never have to pick up blocks again!
 main: net.amunak.bukkit.dropstoinventory.DropsToInventory
 softdepend: [Factions, WorldGuard]
