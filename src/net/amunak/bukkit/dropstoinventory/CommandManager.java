@@ -45,19 +45,19 @@ public class CommandManager implements CommandExecutor {
                 }
                 return true;
             }
-            if((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && args.length == 2) {
+            if(args.length == 2 && (args[1].equalsIgnoreCase("off") || args[1].equalsIgnoreCase("on"))) {
                 if(sender instanceof Player) {
                     Player senderr = (Player) sender;
                     if(!(senderr.hasPermission("dti.change.others"))) {
                         return false;
                     }
                 }
-                Player p = Bukkit.getPlayer(args[1]);
+                Player p = Bukkit.getPlayer(args[0]);
                 if(p != null) {
                     String UUID = p.getUniqueId().toString();
                     List<String> currentBans = DropsToInventory.getInstance().getConfig().getStringList
                             ("blacklistedPlayers");
-                    if(args[0].equalsIgnoreCase("off")) {
+                    if(args[1].equalsIgnoreCase("off")) {
                         if (!(currentBans.contains(UUID))) {
                             currentBans.add(UUID);
                         }
@@ -81,6 +81,8 @@ public class CommandManager implements CommandExecutor {
                         DropsToInventory.sendMessage(senderr, "/dti <on|off> <playername>");
                     return true;
                 }else if(args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off")) {
+                    if(!(senderr.hasPermission("dti.change.self")))
+                        return true;
                     String UUID = senderr.getUniqueId().toString();
                     List<String> currentouts = DropsToInventory.getInstance().getConfig().getStringList
                             ("optedOutPlayers");
