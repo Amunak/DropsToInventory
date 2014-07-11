@@ -42,16 +42,19 @@ public class BreakListener implements Listener {
 
     public static List<String> blackListedBlocks;
     public static List<String> playersTurnedOff;
+    public static List<String> playeresOptedOut;
     private static boolean blackList = false;
 
     public void getIntialList() {
         blackListedBlocks = DropsToInventory.getInstance().getConfig().getStringList("blacklistedBlocks");
         playersTurnedOff = DropsToInventory.getInstance().getConfig().getStringList("blacklistedPlayers");
-        if(!(blackListedBlocks == null)) {
+        playeresOptedOut = DropsToInventory.getInstance().getConfig().getStringList("optedOutPlayers");
+        if(!(blackListedBlocks == null))
             blackList = true;
-        }
         if(playersTurnedOff == null)
             playersTurnedOff = new ArrayList<String>();
+        if(playeresOptedOut == null)
+            playeresOptedOut = new ArrayList<String>();
     }
 
     private boolean wgBreak(Location loc, Player p) {
@@ -86,19 +89,16 @@ public class BreakListener implements Listener {
                 return;
             }
         }
-        if (isFull(event.getPlayer(), event.getBlock().getType())) {
+        if (isFull(event.getPlayer(), event.getBlock().getType()))
             return;
-        }
-        if (playersTurnedOff.contains(event.getPlayer().getUniqueId().toString())) {
+        if (playersTurnedOff.contains(event.getPlayer().getUniqueId().toString()))
             return;
-        }
-        if(DropsToInventory.hFactions) {
-            //Factions check
+        if(playeresOptedOut.contains(event.getPlayer().getUniqueId().toString()))
+            return;
+        if(DropsToInventory.hFactions)
             if(!(fBreak(event.getBlock().getLocation(), event.getPlayer()))) return;
-        }
-        if(DropsToInventory.hWorldGuard) {
+        if(DropsToInventory.hWorldGuard)
             if(!(wgBreak(event.getBlock().getLocation(), event.getPlayer()))) return;
-        }
         event.setCancelled(true);
         Player p = event.getPlayer();
         ItemStack i = p.getItemInHand();

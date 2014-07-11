@@ -32,9 +32,10 @@ import java.util.UUID;
  */
 public class DropsToInventory extends JavaPlugin {
 
-    private static DropsToInventory instance = null;
-    private static BreakListener bl = null;
+    private static DropsToInventory instance;
+    private BreakListener bl;
     private CommandManager cm;
+    private DeathListener dl;
     public static boolean hFactions = false;
     public static boolean hWorldGuard = false;
 
@@ -43,8 +44,10 @@ public class DropsToInventory extends JavaPlugin {
         instance = this;
         this.saveDefaultConfig();
         bl = new BreakListener();
+        dl = new DeathListener();
         bl.getIntialList();
         Bukkit.getPluginManager().registerEvents(bl, instance);
+        Bukkit.getPluginManager().registerEvents(dl, instance);
         if(Bukkit.getPluginManager().isPluginEnabled("WorldGuard"))
             hWorldGuard = true;
         if(Bukkit.getPluginManager().isPluginEnabled("Factions"))

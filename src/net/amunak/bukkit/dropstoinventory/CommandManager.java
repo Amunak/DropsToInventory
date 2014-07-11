@@ -36,6 +36,15 @@ public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("dti")) {
+            if(args == null || args.length <= 0) {
+                if(!(sender instanceof  Player))
+                    return false;
+                Player senderr = (Player) sender;
+                if(senderr.hasPermission("dti.help")) {
+                    DropsToInventory.sendMessage(senderr, "Drops to Inventory. Use /dti help for help.");
+                }
+                return true;
+            }
             if((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && args.length == 2) {
                 if(sender instanceof Player) {
                     Player senderr = (Player) sender;
@@ -63,12 +72,6 @@ public class CommandManager implements CommandExecutor {
                 if(!(sender instanceof Player)) return false;
 
                 Player senderr = (Player) sender;
-                if(args.length <= 0) {
-                    if(senderr.hasPermission("dti.help")) {
-                        DropsToInventory.sendMessage(senderr, "Drops to Inventory. Use /dti help for help.");
-                    }
-                    return true;
-                }
                 if(args[0].equalsIgnoreCase("help") && senderr.hasPermission("dti.help")) {
                     DropsToInventory.sendMessage(senderr, "Help page: 1 of 1");
                     DropsToInventory.sendMessage(senderr, "/dti help");
