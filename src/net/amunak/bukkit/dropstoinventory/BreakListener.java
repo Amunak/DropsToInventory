@@ -17,6 +17,11 @@ package net.amunak.bukkit.dropstoinventory;
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.massivecraft.factions.entity.BoardColls;
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.UPlayer;
+import com.massivecraft.mcore.ps.PS;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -59,21 +64,19 @@ public class BreakListener implements Listener {
 
     private boolean wgBreak(Location loc, Player p) {
         try {
-            Object obj = Class.forName("com.sk89q.worldguard.bukkit.WorldGuardPlugin");
             Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
-            if(plugin == null || !(plugin.getClass().isInstance(obj))) {
+            if(plugin == null || !(plugin instanceof WorldGuardPlugin)) {
                 return true;
             }
-            com.sk89q.worldguard.bukkit.WorldGuardPlugin pl = (com.sk89q.worldguard.bukkit.WorldGuardPlugin) plugin;
+            WorldGuardPlugin pl = (WorldGuardPlugin) plugin;
             return pl.canBuild(p, p.getWorld().getBlockAt((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()));
         }catch(Exception e) {}
         return true;
     }
 
     private boolean fBreak(Location loc, Player p) {
-        com.massivecraft.factions.entity.Faction f = com.massivecraft.factions.entity.UPlayer.get(p).getFaction();
-        com.massivecraft.factions.entity.Faction ff = com.massivecraft.factions.entity.BoardColls.get().getFactionAt(
-                com.massivecraft.mcore.ps.PS.valueOf(loc.getBlock()));
+        Faction f = UPlayer.get(p).getFaction();
+        Faction ff = BoardColls.get().getFactionAt(PS.valueOf(loc.getBlock()));
         if(ff != null) {
             return ff.getId() == f.getId();
         }

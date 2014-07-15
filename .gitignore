@@ -13,3 +13,5 @@ manifest.mf
 /nbproject/
 /support/
 /production/
+/.metadata/
+/.idea/
