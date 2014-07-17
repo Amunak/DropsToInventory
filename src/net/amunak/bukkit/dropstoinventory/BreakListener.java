@@ -110,11 +110,11 @@ public class BreakListener implements Listener {
         Material mat = b.getType();
         byte data = b.getData();
         boolean silk = i.containsEnchantment(Enchantment.SILK_TOUCH);
-        if (!(shouldAdd(mat, i, p))) {
-            return;
-        }
         if (p.getGameMode() == GameMode.CREATIVE) {
             b.setType(Material.AIR);
+            return;
+        }
+        if (!(shouldAdd(mat, i, p))) {
             return;
         }
         int damage = 1;
