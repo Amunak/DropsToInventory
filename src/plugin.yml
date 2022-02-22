@@ -1,0 +1,8 @@
+main: net.amunak.bukkit.dropstoinventory.DropsToInventory
+name: DropsToInventory
+version: 3.0.0
+api-version: 1.18
+description: Never have to pick up blocks again!
+
+authors:
+  - Amunak
