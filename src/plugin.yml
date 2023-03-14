@@ -6,3 +6,24 @@ description: Never have to pick up blocks again!
 
 authors:
   - Amunak
+softdepend:
+  - Factions
+  - WorldGuard
+
+commands:
+  dti:
+    description: Main Drops to inventory command
+    usage: /dti
+    permission: dti.help
+    permission-message: Sorry you can not do this.
+
+permissions:
+  dti.help:
+    description: Access to /dti, and /dti help
+    default: true
+  dti.change.self:
+    descrtiption: Access to turn on/off for yourself with /dti <on|off>
+    default: true
+  dti.change.others:
+    description: Access to turn on/off for others.
+    default: op

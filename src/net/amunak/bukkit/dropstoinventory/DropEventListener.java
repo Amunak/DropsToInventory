@@ -4,13 +4,18 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityDropItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.loot.Lootable;
+import org.bukkit.plugin.PluginLogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -109,6 +114,8 @@ public class DropEventListener implements Listener {
 			return;
 		}
 
+		// TODO in addition to regular removals also add some kind of scheduled garbage collector
+		//  that clears old entries every once in a while
 		this.damageDealerMap.put(entity.getUniqueId(), new LastDamageDealer(damager, entity));
 	}
 
@@ -153,5 +160,55 @@ public class DropEventListener implements Listener {
 		}
 
 		this.damageDealerMap.remove(entity.getUniqueId());
+	}
+
+	/**
+	 * Tries to put given ItemStack into Player's Inventory, returning bool when the original ItemStack is supposed to be deleted.
+	 */
+	protected boolean tryPutInInventory(Player player, ItemStack itemStack) {
+		EntityPickupItemEvent entityEvent = new EntityPickupItemEvent(player, itemStack, remaining);
+		entityEvent.setCancelled(!entityEvent.getEntity().getCanPickupItems());
+		this.level.getCraftServer().getPluginManager().callEvent(entityEvent);
+		if (entityEvent.isCancelled()) {
+			itemstack.setCount(i); // SPIGOT-5294 - restore count
+			return;
+		}
+
+		HashMap<Integer, ItemStack> rest = player.getInventory().addItem(itemStack);
+
+		ItemStack restItemStack = rest.get(0);
+		if (restItemStack == null || restItemStack.getAmount() == 0) {
+			itemStack.setAmount(0);
+
+			return true;
+		}
+
+		itemStack.setAmount(restItemStack.getAmount());
+
+		return false;
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onBlockBreakEvent(@NotNull BlockBreakEvent event) {
+		PluginLogger.getGlobal().info(String.format("BREAK %s %s :: %s", event.getPlayer().getName(), event.getBlock().getClass().getSimpleName(), event.isDropItems()));
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onEntityDropItemEvent(@NotNull EntityDropItemEvent event) {
+		PluginLogger.getGlobal().info(String.format("DROPITEM %s %s :: %s", event.getEntity().getName(), event.getEntity().getClass().getSimpleName(), event.getItemDrop().getName()));
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onHangingBreakByEntityEvent(@NotNull HangingBreakByEntityEvent event) {
+		if (event.getRemover() == null) {
+			PluginLogger.getGlobal().info(String.format("HANGING %s %s :: %s", event.getEntity().getName(), event.getEntity().getClass().getSimpleName(), "NOREMOVER"));
+			return;
+		}
+
+		if (event.getEntity().getType() == EntityType.ITEM_FRAME) {
+
+		}
+
+		PluginLogger.getGlobal().info(String.format("HANGING %s %s :: %s", event.getEntity().getName(), event.getEntity().getClass().getSimpleName(), event.getRemover().getName()));
 	}
 }
